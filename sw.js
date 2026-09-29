@@ -6,7 +6,7 @@
  *
  * Bump VERSION whenever any shell file changes, so phones pick up the update.
  */
-const VERSION = 'pumplink-v1.1.0';
+const VERSION = 'pumplink-v1.2.0';
 const MQTT_JS = 'https://cdn.jsdelivr.net/npm/mqtt@5.16.0/dist/mqtt.min.js';
 
 const SHELL = [

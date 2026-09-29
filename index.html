@@ -9,8 +9,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="PumpLink">
-<title>PumpLink</title>
+<meta name="apple-mobile-web-app-title" content="Damasy PumpLink">
+<title>Damasy PumpLink</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -182,7 +182,7 @@ main{flex:1;overflow-y:auto;padding:0 20px 18px;-webkit-overflow-scrolling:touch
 
 <div id="app">
   <div class="topbar">
-    <span class="ltr" style="font:600 12px var(--fn);letter-spacing:.14em">PUMPLINK</span>
+    <span class="ltr" style="font:600 12px var(--fn);letter-spacing:.14em">DAMASY PUMPLINK</span>
     <span class="net"><span data-t="netText"></span><span class="dot" style="width:6px;height:6px" data-css="background:netDot"></span><span class="ltr">MQTT</span></span>
   </div>
 
@@ -201,7 +201,7 @@ main{flex:1;overflow-y:auto;padding:0 20px 18px;-webkit-overflow-scrolling:touch
     <section class="screen" data-if="isSetup" hidden>
       <form id="setupForm" autocomplete="on" style="padding:54px 6px 0;display:flex;flex-direction:column;min-height:calc(100dvh - 60px)">
         <img src="img/on.png" alt="" style="width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 0 26px rgba(200,234,69,.35))">
-        <div class="eyebrow lime" style="margin-top:30px"><span class="ltr" style="letter-spacing:.24em">PUMPLINK</span> · إعداد أول مرة</div>
+        <div class="eyebrow lime" style="margin-top:30px"><span class="ltr" style="letter-spacing:.24em">DAMASY PUMPLINK</span> · إعداد أول مرة</div>
         <div class="h1" style="margin-top:10px">وصّل التطبيق<br>بالسيرفر</div>
         <div class="p" style="margin-top:12px;max-width:300px">بيانات HiveMQ Cloud بتاعة البيت. بتتحفظ على الموبايل ده بس، ومش مكتوبة في ملفات التطبيق.</div>
 
@@ -229,7 +229,7 @@ main{flex:1;overflow-y:auto;padding:0 20px 18px;-webkit-overflow-scrolling:touch
     <section class="screen" data-if="isSignIn" hidden>
       <div style="padding:60px 6px 0;display:flex;flex-direction:column;min-height:calc(100dvh - 60px)">
         <img src="img/on.png" alt="" style="width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 0 26px rgba(200,234,69,.35))">
-        <div class="eyebrow lime" style="margin-top:30px"><span class="ltr" style="letter-spacing:.24em">PUMPLINK</span> · <span data-t="pumpName"></span></div>
+        <div class="eyebrow lime" style="margin-top:30px"><span class="ltr" style="letter-spacing:.24em">DAMASY PUMPLINK</span> · <span data-t="pumpName"></span></div>
         <div class="h1" style="font-size:36px;margin-top:10px">مين بيستخدم<br>المضخة؟</div>
         <div class="p" style="margin-top:14px;max-width:290px">اختار اسمك عشان أهل البيت يعرفوا مين فصل الموتور أو وصّله.</div>
 
@@ -286,7 +286,7 @@ main{flex:1;overflow-y:auto;padding:0 20px 18px;-webkit-overflow-scrolling:touch
 
         <button class="chk idle" data-if="checkIdle" data-click="check" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>تأكد من وحدة التحكم</button>
         <div class="chk busy" data-if="checkBusy" hidden><span class="spin"></span>بنتأكد من وحدة التحكم…</div>
-        <div class="chk ok" data-if="checkOk" hidden><span class="dot" style="width:7px;height:7px;background:var(--green)"></span>وحدة التحكم ردّت · الحالة متأكدة</div>
+        <div class="chk ok" data-if="checkOk" hidden><span class="dot" style="width:7px;height:7px;background:var(--green)"></span><span data-t="checkOkText"></span></div>
         <div class="chk none" data-if="checkNone" hidden><span class="dot" style="width:7px;height:7px;background:var(--red)"></span>وحدة التحكم مردّتش</div>
       </div>
 
@@ -553,7 +553,7 @@ const CFG = {
   UNPROMPTED_MS: 10000,   // a state change this long after any command did not come from an app
   NAME_MAX_BYTES: 23,     // firmware keeps the name in char lastUser[24]
   PUMP_NAME: 'موتور بيت الدماصي',
-  VERSION: '1.1'
+  VERSION: '1.2'
 };
 
 const LS = { conn: 'pumplink.conn', name: 'pumplink.name', device: 'pumplink.device' };
@@ -1151,6 +1151,10 @@ function view() {
       : S.net === 'nolib' ? 'مكتبة MQTT ما اتحمّلتش (محتاجة نت أول مرة). اتأكد إن النت شغال واقفل التطبيق وافتحه تاني.'
       : 'مش هنقدر نبعت أوامر أو نعرف الحالة الحقيقية لحد ما الاتصال يرجع. التطبيق بيحاول يتصل تاني لوحده.',
     checkIdle: !S.check, checkBusy: S.check === 'checking', checkOk: S.check === 'ok', checkNone: S.check === 'none',
+    // Only promise control when nothing is actually blocking it right now.
+    checkOkText: S.restart ? 'وحدة التحكم ردّت · فيه إعادة تشغيل جارية'
+      : S.pending ? 'وحدة التحكم ردّت · فيه أمر لسه بيتنفّذ'
+      : 'وحدة التحكم ردّت · تقدر تتحكم في الموتور دلوقتي',
 
     // home: cards
     showFault: !!S.fault,
@@ -1204,7 +1208,7 @@ function view() {
     connDirty,
     clearConnText: S.armed === 'conn' ? 'اضغط تاني للتأكيد — هتحتاج تكتبها من الأول' : 'امسح بيانات الاتصال من الموبايل ده',
     signOutText: 'امسح اسمي من الموبايل ده',
-    versionLine: 'PumpLink ' + CFG.VERSION + ' · firmware ' + (st.fw ? st.fw + (st.build ? ' (' + st.build + ')' : '') : '—'),
+    versionLine: 'Damasy PumpLink ' + CFG.VERSION + ' · firmware ' + (st.fw ? st.fw + (st.build ? ' (' + st.build + ')' : '') : '—'),
 
     // overlays
     showConfirm: S.confirm && app && S.tab === 'home',
@@ -1224,7 +1228,7 @@ const LOG_SRC = { fw: ['جهاز', 'FW'], rx: ['وارد', 'RX'], tx: ['صادر
 function fmtDate(t) { const d = new Date(t); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + clock(t); }
 function logText() {
   const en = S.logLang === 'en', st = S.status || {};
-  const head = 'PumpLink ' + CFG.VERSION + ' · ' + CLIENT_ID + ' · fw ' + (st.fw || '?') + ' · ' + fmtDate(now()) + ' · ' + fresh();
+  const head = 'Damasy PumpLink ' + CFG.VERSION + ' · ' + CLIENT_ID + ' · fw ' + (st.fw || '?') + ' · ' + fmtDate(now()) + ' · ' + fresh();
   return head + '\n' + S.dbg.map(e => clock(e.at) + '  ' + LOG_SRC[e.src][en ? 1 : 0] + '  ' + (en ? e.en : e.ar).replace(/[\u2066-\u2069]/g, '')).join('\n') + '\n';
 }
 function fallbackCopy(text) {
@@ -1356,7 +1360,7 @@ function render() {
   });
   const lb = document.getElementById('logbody'); if (lb) lb.dir = S.logLang === 'en' ? 'ltr' : 'rtl';
   BIND_EL.forEach(el => { if (document.activeElement !== el) { const v = getPath(el.dataset.bind) || ''; if (el.value !== v) el.value = v; } });
-  document.title = S.stage === 'app' && S.power ? 'PumpLink · ' + (S.power === 'ON' ? 'جاهز' : 'مفصول') : 'PumpLink';
+  document.title = S.stage === 'app' && S.power ? 'Damasy PumpLink · ' + (S.power === 'ON' ? 'جاهز' : 'مفصول') : 'Damasy PumpLink';
 }
 
 /* =====================================================================
