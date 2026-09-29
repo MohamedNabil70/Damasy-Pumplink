@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://cdn.jsdelivr.net wss: ws://localhost:* ws://127.0.0.1:*; manifest-src 'self'; worker-src 'self' blob:">
+<meta name="theme-color" content="#181120">
+<meta name="color-scheme" content="dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PumpLink">
+<title>PumpLink</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preload" href="fonts/readex-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ---------- fonts: Archivo / Archivo Narrow (from the design) + Readex Pro for Arabic ---------- */
+@font-face{font-family:'Archivo';font-weight:400 700;font-display:swap;src:url(fonts/archivo-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Archivo';font-weight:400 700;font-display:swap;src:url(fonts/archivo-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Archivo Narrow';font-weight:500 700;font-display:swap;src:url(fonts/archivo-narrow-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Archivo Narrow';font-weight:500 700;font-display:swap;src:url(fonts/archivo-narrow-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Readex Pro';font-weight:400;font-display:swap;src:url(fonts/readex-arabic-400.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+0870-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FEFC}
+@font-face{font-family:'Readex Pro';font-weight:500;font-display:swap;src:url(fonts/readex-arabic-500.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+0870-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FEFC}
+@font-face{font-family:'Readex Pro';font-weight:600;font-display:swap;src:url(fonts/readex-arabic-600.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+0870-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FEFC}
+@font-face{font-family:'Readex Pro';font-weight:700;font-display:swap;src:url(fonts/readex-arabic-700.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+0870-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FEFC}
+
+:root{
+  --f:'Archivo','Readex Pro',system-ui,sans-serif;
+  --fn:'Archivo Narrow','Readex Pro',system-ui,sans-serif;
+  --lime:#c8ea45; --lime-soft:#e4f2a8; --green:#7ec9a2; --amber:#e2b04f; --amber-text:#ecc77f;
+  --red:#ef8f7a; --orange:#e2874f; --bg:#120d16; --phone:#181120;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{height:100%;background:var(--phone)}
+body{font-family:var(--f);-webkit-font-smoothing:antialiased;color:#fff;overflow:hidden}
+a{color:var(--lime);text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:inherit}
+input{font:inherit;color:inherit}
+::-webkit-scrollbar{width:0}
+.ltr{direction:ltr;unicode-bidi:isolate}
+@keyframes pl-pulse{0%{opacity:.25;transform:scale(.97)}50%{opacity:.75;transform:scale(1.04)}100%{opacity:.25;transform:scale(.97)}}
+@keyframes pl-breathe{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}
+@keyframes pl-spin{to{transform:rotate(360deg)}}
+@keyframes pl-spin-r{to{transform:rotate(-360deg)}}
+@keyframes pl-toast{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pl-sheet{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pl-fade{from{opacity:0}to{opacity:1}}
+@keyframes pl-sweep{to{transform:rotate(360deg)}}
+@keyframes pl-emerge{0%{opacity:.22}50%{opacity:.9}100%{opacity:.22}}
+@keyframes pl-settle{0%{opacity:.3}50%{opacity:.72}100%{opacity:.3}}
+@keyframes pl-drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(18px,-22px) scale(1.08)}100%{transform:translate(0,0) scale(1)}}
+
+/* ---------- frame (the design's phone becomes the viewport) ---------- */
+.glow{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
+.glow.g1{top:-140px;left:-90px;width:340px;height:340px;background:radial-gradient(circle,rgba(200,234,69,.34),rgba(200,234,69,0) 68%);filter:blur(42px);animation:pl-drift 18s ease-in-out infinite}
+.glow.g2{top:230px;right:-130px;width:320px;height:320px;background:radial-gradient(circle,rgba(168,74,190,.36),rgba(168,74,190,0) 68%);filter:blur(46px);animation:pl-drift 24s ease-in-out infinite reverse}
+.glow.g3{bottom:-120px;left:20px;width:300px;height:300px;background:radial-gradient(circle,rgba(226,114,74,.2),rgba(226,114,74,0) 70%);filter:blur(48px)}
+#app{position:relative;z-index:1;max-width:480px;height:100%;height:100dvh;margin:0 auto;display:flex;flex-direction:column;overflow:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 26px 0;font:600 12px var(--fn);color:rgba(255,255,255,.45);letter-spacing:.04em;min-height:30px}
+.topbar .net{display:flex;gap:7px;align-items:center}
+.dot{display:inline-block;border-radius:50%;flex:none}
+main{flex:1;overflow-y:auto;padding:0 20px 18px;-webkit-overflow-scrolling:touch}
+.screen{animation:pl-fade .35s ease-out}
+
+/* ---------- type ---------- */
+.eyebrow{font:600 12px var(--fn);color:rgba(255,255,255,.4)}
+.eyebrow.lime{color:var(--lime)}
+.h1{font:600 32px/1.25 var(--fn);color:#fff}
+.p{font:400 13.5px/1.75 var(--f);color:rgba(255,255,255,.45)}
+.foot{font:500 11.5px/1.7 var(--fn);color:rgba(255,255,255,.28)}
+.foot.ltr{letter-spacing:.06em}
+.back{display:inline-flex;align-self:flex-start;align-items:center;gap:8px;font:600 12.5px var(--fn);color:rgba(255,255,255,.45)}
+.back:hover{color:#fff}
+
+/* ---------- surfaces ---------- */
+.glass{background:rgba(255,255,255,.035);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.075)}
+.list{border-radius:26px;padding:4px 18px}
+.list.pad20{padding:4px 20px}
+.info{margin-top:16px;border-radius:28px;padding:6px 20px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.row:last-child{border-bottom:0}
+.row .k{font:400 13.5px var(--f);color:rgba(255,255,255,.5);flex:none}
+.row .v{display:flex;align-items:center;gap:8px;font:400 13px var(--f);color:rgba(255,255,255,.85);min-width:0;text-align:left}
+.row .v.num{font:500 12.5px var(--fn);letter-spacing:.05em;color:rgba(255,255,255,.6)}
+.field{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.field:last-child{border-bottom:0}
+.field label{flex:none;width:104px;font:400 13px var(--f);color:rgba(255,255,255,.5)}
+.field input{flex:1;min-width:0;background:none;border:none;outline:none;text-align:left;direction:ltr;font:500 13px var(--fn);letter-spacing:.04em;color:rgba(255,255,255,.9);padding:0}
+.field input::placeholder{color:rgba(255,255,255,.25)}
+.field .ro{flex:1;min-width:0;text-align:left;font:500 13px var(--fn);letter-spacing:.04em;color:rgba(255,255,255,.5);direction:ltr;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.section{font:600 11.5px var(--fn);color:rgba(255,255,255,.35);padding:22px 8px 9px}
+
+/* ---------- buttons ---------- */
+.btn{display:block;width:100%;padding:16px 0;text-align:center;border-radius:20px;font:500 13.5px var(--f)}
+.btn.lime{background:rgba(200,234,69,.1);border:1px solid rgba(200,234,69,.3);color:var(--lime)}
+.btn.lime:hover{background:rgba(200,234,69,.18)}
+.btn.primary{padding:17px 0;background:rgba(200,234,69,.16);border:1px solid rgba(200,234,69,.42);font:600 14px var(--f);color:var(--lime-soft)}
+.btn.primary:hover{background:rgba(200,234,69,.26)}
+.btn.disabled{padding:17px 0;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);font:600 14px var(--f);color:rgba(255,255,255,.3);cursor:not-allowed}
+.btn.danger{background:rgba(239,143,122,.08);border:1px solid rgba(239,143,122,.3);font:500 13px var(--f);color:var(--red)}
+.btn.danger:hover{background:rgba(239,143,122,.16)}
+.chip{font:700 10px var(--fn);padding:3px 6px;border-radius:6px}
+.chip.lime{background:rgba(200,234,69,.12);border:1px solid rgba(200,234,69,.3);color:var(--lime)}
+.chip.grey{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:rgba(255,255,255,.65)}
+.avatar{flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.85)}
+
+/* ---------- status pills & check button ---------- */
+.pill{display:flex;align-items:center;gap:8px;padding:6px 10px 6px 12px;border-radius:999px;font:600 12px var(--fn)}
+.pill.live{background:rgba(126,201,162,.07);border:1px solid rgba(126,201,162,.22);color:rgba(255,255,255,.6)}
+.pill.stale{background:rgba(226,176,79,.12);border:1px solid rgba(226,176,79,.45);color:var(--amber-text)}
+.pill.off{background:rgba(239,143,122,.1);border:1px solid rgba(239,143,122,.42);color:var(--red)}
+.chk{display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:14px;font:500 12.5px var(--f)}
+.chk.idle{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.88)}
+.chk.idle:hover{background:rgba(255,255,255,.09);color:#fff}
+.chk.busy{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.chk.ok{background:rgba(126,201,162,.1);border:1px solid rgba(126,201,162,.35);color:#a9dcc0}
+.chk.none{background:rgba(239,143,122,.1);border:1px solid rgba(239,143,122,.38);color:#f3b3a4}
+.spin{width:12px;height:12px;border-radius:50%;border:1.6px solid rgba(255,255,255,.7);border-top-color:transparent;animation:pl-spin .8s linear infinite}
+
+/* ---------- notice cards ---------- */
+.note{margin-bottom:16px;border-radius:22px;padding:16px 18px}
+.note .hd{display:flex;align-items:center;gap:10px}
+.note .tt{font:700 12px var(--fn)}
+.note .tx{font:400 13.5px/1.7 var(--f);color:rgba(255,255,255,.72);margin-top:9px}
+.note.offline{background:rgba(255,255,255,.04);border:1px solid rgba(239,143,122,.32)}
+.note.stale{background:rgba(226,176,79,.09);border:1px dashed rgba(226,176,79,.5)}
+.note.err{background:rgba(226,135,79,.1);border:1px solid rgba(226,135,79,.36);animation:pl-fade .3s ease-out}
+.note.fault{background:rgba(239,143,122,.14);border:1.5px solid rgba(239,143,122,.62);box-shadow:0 0 40px -14px rgba(239,143,122,.6)}
+.note.fault .tx{color:rgba(255,255,255,.82);margin-top:10px}
+
+/* ---------- dial ---------- */
+.hero{position:relative;border-radius:34px;padding:34px 24px 28px;background:rgba(255,255,255,.045);-webkit-backdrop-filter:blur(26px);backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.09);box-shadow:0 30px 60px -30px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.07)}
+.dial{position:relative;width:214px;height:214px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .35s ease;user-select:none;-webkit-user-select:none}
+.layer{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:pl-fade .28s ease-out}
+.abs{position:absolute;border-radius:50%}
+.ico{position:relative;height:96px;display:flex;align-items:center;justify-content:center}
+.ico img{width:96px;height:96px;object-fit:contain}
+.big{position:relative;height:40px;margin-top:10px;display:flex;align-items:center;justify-content:center;font:600 30px/1 var(--fn)}
+.sub{position:relative;min-height:17px;max-width:168px;margin-top:8px;display:flex;align-items:center;justify-content:center;text-align:center;font:400 12.5px/1.45 var(--f)}
+.sweep{position:absolute;inset:-1px;border-radius:50%;-webkit-mask:radial-gradient(circle,transparent 105px,#000 105px,#000 108px,transparent 108px);mask:radial-gradient(circle,transparent 105px,#000 105px,#000 108px,transparent 108px)}
+.act{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 0;border-radius:18px;font:500 13px var(--f)}
+.act.on{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.85)}
+.act.on:hover{background:rgba(255,255,255,.09);color:#fff}
+.act.dis{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);font:400 12.5px var(--f);color:rgba(255,255,255,.55);cursor:not-allowed}
+
+/* ---------- tabs, toast, sheet ---------- */
+.tabs{flex:none;display:flex;padding:10px 22px calc(12px + env(safe-area-inset-bottom));gap:6px;background:rgba(24,17,32,.62);-webkit-backdrop-filter:blur(28px);backdrop-filter:blur(28px);border-top:1px solid rgba(255,255,255,.07)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;border-radius:16px;text-align:center}
+.tab span{font:400 11px var(--f)}
+.toast{position:absolute;bottom:calc(104px + env(safe-area-inset-bottom));left:16px;right:16px;z-index:40;display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:18px;background:rgba(44,30,52,.8);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border:1px solid rgba(200,234,69,.22);box-shadow:0 18px 40px -18px rgba(0,0,0,.9);animation:pl-toast .4s ease-out}
+.sheet-bg{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;justify-content:flex-end;background:rgba(18,13,22,.68);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);animation:pl-fade .25s ease-out}
+.sheet{margin:14px 14px calc(14px + env(safe-area-inset-bottom));padding:26px 24px 22px;border-radius:32px;background:rgba(44,30,52,.86);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 70px -20px rgba(0,0,0,.9);animation:pl-sheet .32s cubic-bezier(.2,.9,.2,1)}
+.hist{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.hist:last-child{border-bottom:0}
+.pick:hover{background:rgba(200,234,69,.1)!important;border-color:rgba(200,234,69,.35)!important}
+.logbtn{flex:none;display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);font:600 12.5px var(--fn);letter-spacing:.06em;color:rgba(255,255,255,.85)}
+.logbtn:hover{background:rgba(255,255,255,.09);color:#fff}
+.logsheet{display:flex;flex-direction:column;height:calc(100dvh - 70px - env(safe-area-inset-top) - env(safe-area-inset-bottom));padding:20px 16px 14px}
+.seg{display:flex;padding:3px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09)}
+.segb{padding:6px 12px;border-radius:9px;font:500 12px var(--f);color:rgba(255,255,255,.5)}
+.segb.on{background:rgba(200,234,69,.14);color:var(--lime)}
+.logbody{flex:1;min-height:0;overflow-y:auto;margin-top:12px;border-radius:16px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);padding:10px 12px;font:400 11.5px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,'Readex Pro',monospace;-webkit-user-select:text;user-select:text}
+.lg{display:flex;gap:8px;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.lg .lt{flex:none;color:rgba(255,255,255,.32);direction:ltr}
+.lg .ls{flex:none;width:38px;text-align:center;font:600 10px/1.9 var(--fn);border-radius:6px;background:rgba(255,255,255,.05);align-self:flex-start;margin-top:1px}
+.lg .lm{flex:1;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;color:rgba(255,255,255,.8);unicode-bidi:plaintext}
+.lg.fw .ls{color:rgba(255,255,255,.72)} .lg.rx .ls{color:var(--green)} .lg.tx .ls{color:var(--lime)} .lg.app .ls{color:#f2c39f}
+.lg.warn .lm{color:var(--amber-text)} .lg.bad .lm{color:#f3b3a4}
+.mini{padding:7px 11px;border-radius:12px;font:400 11.5px var(--f)}
+.mini.lime{color:var(--lime);border:1px solid rgba(200,234,69,.3);background:rgba(200,234,69,.08)}
+.mini.lime:hover{background:rgba(200,234,69,.18)}
+.mini.rm{color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.09)}
+.mini.rm:hover,.mini.rm.arm{color:var(--red);border-color:rgba(239,143,122,.4)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mqtt@5.16.0/dist/mqtt.min.js" integrity="sha384-9WWboT9UtuPFRlOLq4FygQkcJxzYcpz8SXGkNyCEXM+44n14xzjNlrRKYZwuF/A6" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+
+<div id="app">
+  <div class="topbar">
+    <span class="ltr" style="font:600 12px var(--fn);letter-spacing:.14em">PUMPLINK</span>
+    <span class="net"><span data-t="netText"></span><span class="dot" style="width:6px;height:6px" data-css="background:netDot"></span><span class="ltr">MQTT</span></span>
+  </div>
+
+  <div class="toast" data-if="showToast" hidden>
+    <div class="avatar" style="width:30px;height:30px;background:rgba(200,234,69,.14);border-color:rgba(200,234,69,.3);font:500 12px var(--f);color:var(--lime)" data-t="toastInitials"></div>
+    <div style="flex:1;min-width:0">
+      <div style="font:500 13.5px var(--f);color:rgba(255,255,255,.92)" data-t="toastTitle"></div>
+      <div style="font:500 11.5px var(--fn);color:rgba(255,255,255,.45);margin-top:2px">دلوقتي · من موبايل تاني</div>
+    </div>
+    <button data-click="dismissToast" style="padding:4px 8px;font:600 12px var(--fn);color:rgba(255,255,255,.5)" aria-label="إغلاق">✕</button>
+  </div>
+
+  <main id="main">
+
+    <!-- ========== FIRST RUN: CONNECTION ========== -->
+    <section class="screen" data-if="isSetup" hidden>
+      <form id="setupForm" autocomplete="on" style="padding:54px 6px 0;display:flex;flex-direction:column;min-height:calc(100dvh - 60px)">
+        <img src="img/on.png" alt="" style="width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 0 26px rgba(200,234,69,.35))">
+        <div class="eyebrow lime" style="margin-top:30px"><span class="ltr" style="letter-spacing:.24em">PUMPLINK</span> · إعداد أول مرة</div>
+        <div class="h1" style="margin-top:10px">وصّل التطبيق<br>بالسيرفر</div>
+        <div class="p" style="margin-top:12px;max-width:300px">بيانات HiveMQ Cloud بتاعة البيت. بتتحفظ على الموبايل ده بس، ومش مكتوبة في ملفات التطبيق.</div>
+
+        <div class="glass list pad20" style="margin-top:26px">
+          <div class="field"><label for="in-host">السيرفر</label><input id="in-host" name="host" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="xxxxxxxx.s1.eu.hivemq.cloud" data-bind="setup.host"></div>
+          <div class="field"><label for="in-user">اسم المستخدم</label><input id="in-user" name="username" autocomplete="username" autocapitalize="off" spellcheck="false" data-bind="setup.user"></div>
+          <div class="field"><label for="in-pass">كلمة السر</label><input id="in-pass" name="password" type="password" autocomplete="current-password" data-bind="setup.pass"></div>
+          <div class="field"><label>المنفذ</label><span class="ro">wss · 8884 · /mqtt</span></div>
+        </div>
+
+        <div class="note err" style="margin:16px 0 0" data-if="showSetupErr" hidden>
+          <div class="hd"><span class="dot" style="width:8px;height:8px;background:var(--orange)"></span><span class="tt" style="color:var(--orange)">مقدرناش نتصل</span></div>
+          <div class="tx" data-t="setupErr"></div>
+        </div>
+
+        <button type="submit" class="btn primary" style="margin-top:18px" data-if="canConnect" hidden>اتصل</button>
+        <div class="btn disabled" style="margin-top:18px;display:flex;align-items:center;justify-content:center;gap:10px" data-if="setupBusy" hidden><span class="spin"></span>بيتصل…</div>
+        <div class="btn disabled" style="margin-top:18px" data-if="cannotConnect" hidden>اكتب البيانات الأول</div>
+
+        <div class="foot" style="margin-top:auto;padding:26px 0 8px">مفيش أي بيانات سرية في ملفات التطبيق. تقدر تغيّرها أو تمسحها بعدين من الإعدادات.</div>
+      </form>
+    </section>
+
+    <!-- ========== SIGN IN (name picker) ========== -->
+    <section class="screen" data-if="isSignIn" hidden>
+      <div style="padding:60px 6px 0;display:flex;flex-direction:column;min-height:calc(100dvh - 60px)">
+        <img src="img/on.png" alt="" style="width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 0 26px rgba(200,234,69,.35))">
+        <div class="eyebrow lime" style="margin-top:30px"><span class="ltr" style="letter-spacing:.24em">PUMPLINK</span> · <span data-t="pumpName"></span></div>
+        <div class="h1" style="font-size:36px;margin-top:10px">مين بيستخدم<br>المضخة؟</div>
+        <div class="p" style="margin-top:14px;max-width:290px">اختار اسمك عشان أهل البيت يعرفوا مين فصل الموتور أو وصّله.</div>
+
+        <div data-if="rosterLoading" hidden style="margin-top:28px;border-radius:22px;padding:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;font:400 13px/1.6 var(--f);color:rgba(255,255,255,.55)"><span class="spin"></span><span data-t="rosterLoadingText"></span></div>
+
+        <div data-if="firstRun" hidden style="margin-top:28px;border-radius:22px;padding:18px;background:rgba(200,234,69,.07);border:1px solid rgba(200,234,69,.25);font:400 13px/1.75 var(--f);color:rgba(255,255,255,.7)">لسه مفيش حد متسجل. أول اسم يتضاف هيبقى <span style="color:var(--lime)">المسؤول</span> — هو اللي يقدر يضيف أفراد العيلة ويشيلهم ويدي صلاحية مسؤول.</div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:28px" data-list="profiles"></div>
+
+        <button class="btn danger" style="margin-top:20px" data-if="signinAuthFail" data-click="fixConn" hidden>غيّر بيانات الاتصال</button>
+        <button class="btn lime" style="margin-top:20px" data-click="goSignUp" data-if="rosterReady" hidden data-t="signinCta"></button>
+        <div class="foot" style="margin-top:auto;padding:26px 0 8px">مضخة واحدة · <span class="ltr">pump-esp32</span> · عن طريق <span class="ltr">HiveMQ Cloud</span></div>
+      </div>
+    </section>
+
+    <!-- ========== SIGN UP / ADD MEMBER ========== -->
+    <section class="screen" data-if="isSignUp" hidden>
+      <form id="signupForm" style="padding:40px 6px 0;display:flex;flex-direction:column;min-height:calc(100dvh - 60px)">
+        <button type="button" class="back" data-click="backFromSignUp">→ رجوع</button>
+        <div class="h1" style="margin-top:22px" data-t="signupTitle"></div>
+        <div class="p" style="margin-top:12px;max-width:290px" data-t="signupHint"></div>
+
+        <div class="glass" style="margin-top:26px;border-radius:22px;padding:16px 18px">
+          <label for="in-name" style="font:600 11.5px var(--fn);color:rgba(255,255,255,.35)">الاسم</label>
+          <input id="in-name" autocomplete="off" maxlength="30" placeholder="مثلاً: عمر" data-bind="draft" style="display:block;width:100%;margin-top:8px;background:none;border:none;outline:none;font:400 16px var(--f);color:#fff;padding:0">
+        </div>
+        <div data-if="draftErr" hidden style="margin-top:10px;padding:0 4px;font:400 12.5px/1.6 var(--f);color:#f3b3a4" data-t="draftErr"></div>
+
+        <button type="submit" class="btn primary" style="margin-top:18px" data-if="canCreate" hidden data-t="signupCta"></button>
+        <div class="btn disabled" style="margin-top:18px" data-if="cannotCreate" hidden data-t="cannotCreateText"></div>
+
+        <div style="margin-top:14px;padding:0 4px;font:400 12.5px/1.7 var(--f);color:rgba(255,255,255,.45)" data-t="signupRoleNote"></div>
+        <div class="foot" style="margin-top:auto;padding:26px 0 8px">كل أهل البيت بيتحكموا في نفس المضخة. بيانات الاتصال في الإعدادات.</div>
+      </form>
+    </section>
+
+    <!-- ========== HOME ========== -->
+    <section class="screen" data-if="isHome" hidden>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;padding:22px 6px 22px">
+        <div style="min-width:0">
+          <div class="eyebrow" data-t="hello"></div>
+          <div class="h1" style="margin-top:6px" data-t="pumpName"></div>
+        </div>
+        <button data-click="openSettings" aria-label="الإعدادات" style="flex:none;width:38px;height:38px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94a7.6 7.6 0 0 0 .05-.94 7.6 7.6 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.3 7.3 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.59.24-1.13.56-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.65 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.6.62-.6.94s.2.63.06.94L2.77 14.5a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.5.38 1.04.7 1.63.94l.36 2.54a.5.5 0 0 0 .5.42h3.84a.5.5 0 0 0 .5-.42l.36-2.54c.59-.24 1.13-.56 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.56ZM12 15.6A3.6 3.6 0 1 1 15.6 12 3.6 3.6 0 0 1 12 15.6Z"/></svg>
+        </button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:0 6px 18px;margin-top:-8px">
+        <div class="pill live" data-if="isLive" hidden><span class="dot" style="width:6px;height:6px;background:var(--green)"></span><span data-t="liveText"></span></div>
+        <div class="pill stale" data-if="isStale" hidden><span class="dot" style="width:6px;height:6px;background:var(--amber)"></span>قديمة · مفيش إشارة من أكتر من <span class="ltr">150</span> ث</div>
+        <div class="pill stale" data-if="isNoBroker" hidden><span class="dot" style="width:6px;height:6px;background:var(--amber)"></span><span data-t="noBrokerPill"></span></div>
+        <div class="pill off" data-if="isOffline" hidden><span class="dot" style="width:6px;height:6px;background:var(--red)"></span>أوفلاين · وحدة التحكم مفصولة</div>
+
+        <button class="chk idle" data-if="checkIdle" data-click="check" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>تأكد من وحدة التحكم</button>
+        <div class="chk busy" data-if="checkBusy" hidden><span class="spin"></span>بنتأكد من وحدة التحكم…</div>
+        <div class="chk ok" data-if="checkOk" hidden><span class="dot" style="width:7px;height:7px;background:var(--green)"></span>وحدة التحكم ردّت · الحالة متأكدة</div>
+        <div class="chk none" data-if="checkNone" hidden><span class="dot" style="width:7px;height:7px;background:var(--red)"></span>وحدة التحكم مردّتش</div>
+      </div>
+
+      <div class="note fault" data-if="showFault" hidden>
+        <div class="hd">
+          <span style="width:22px;height:22px;border-radius:7px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--red);font:700 13px var(--f);color:#1b1323">!</span>
+          <span class="tt" style="color:var(--red)">عطل · الكونتاكتور مستجابش</span>
+        </div>
+        <div class="tx" data-t="faultText"></div>
+        <div style="margin-top:10px;font:600 11.5px var(--fn);color:rgba(239,143,122,.8)" data-t="faultFoot"></div>
+      </div>
+
+      <div class="note offline" data-if="isOffline" hidden>
+        <div class="hd"><span class="dot" style="width:8px;height:8px;background:var(--red)"></span><span class="tt" style="color:var(--red)">وحدة التحكم أوفلاين</span></div>
+        <div class="tx">السيرفر بيقول إن وحدة التحكم مفصولة، ومفيش أي إشارة منها. اللي قدامك هو آخر حالة معروفة. التحكم مقفول لحد ما ترجع.</div>
+      </div>
+
+      <div class="note stale" data-if="isNoBroker" hidden>
+        <div class="hd"><span class="dot" style="width:8px;height:8px;background:var(--amber)"></span><span class="tt" style="color:var(--amber)">التطبيق مش متصل بالسيرفر</span></div>
+        <div class="tx" data-t="noBrokerText"></div>
+      </div>
+
+      <div class="note stale" data-if="isStale" hidden>
+        <div class="hd"><span class="dot" style="width:8px;height:8px;background:var(--amber)"></span><span class="tt" style="color:var(--amber)">الحالة ممكن تكون قديمة</span></div>
+        <div class="tx">مسمعناش حاجة من وحدة التحكم من أكتر من <span class="ltr">150</span> ثانية. الموتور ممكن يكون حالته مختلفة عن اللي ظاهر. دوس «تأكد من وحدة التحكم» عشان تتأكد.</div>
+      </div>
+
+      <div data-if="showManual" hidden style="margin-bottom:16px;display:flex;align-items:flex-start;gap:12px;border-radius:22px;padding:14px 16px 14px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12)">
+        <span style="width:20px;height:20px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.3);font:600 11px var(--f);color:rgba(255,255,255,.7);margin-top:1px">i</span>
+        <div style="flex:1;min-width:0">
+          <div style="font:600 12px var(--fn);color:rgba(255,255,255,.55)">اتغيرت من غير التطبيق</div>
+          <div style="font:400 13px/1.65 var(--f);color:rgba(255,255,255,.72);margin-top:5px" data-t="manualText"></div>
+        </div>
+        <button data-click="dismissManual" style="padding:2px 6px;font:600 12px var(--fn);color:rgba(255,255,255,.45)" aria-label="إغلاق">✕</button>
+      </div>
+
+      <div class="note err" data-if="showError" hidden>
+        <div class="hd"><span class="dot" style="width:8px;height:8px;background:var(--orange)"></span><span class="tt" style="color:var(--orange)" data-t="errorTitle"></span></div>
+        <div class="tx" data-t="errorText"></div>
+        <div style="display:flex;gap:10px;margin-top:14px">
+          <button data-if="canRetry" hidden data-click="retry" style="padding:10px 16px;border-radius:14px;background:rgba(226,135,79,.18);border:1px solid rgba(226,135,79,.4);font:600 12.5px var(--f);color:#f2c39f">حاول تاني</button>
+          <button data-click="dismissError" style="padding:10px 16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);font:400 12.5px var(--f);color:rgba(255,255,255,.6)">تجاهل</button>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div style="display:flex;justify-content:center">
+          <div class="dial" id="dial" role="button" data-click="toggle" data-css="opacity:dialOpacity;cursor:dialCursor" data-aria="dialAria">
+
+            <div class="layer" data-if="isRestarting" hidden>
+              <div class="abs" style="inset:0;border:1px solid rgba(226,135,79,.45);box-shadow:0 0 60px rgba(226,135,79,.24);animation:pl-pulse 1.6s ease-in-out infinite"></div>
+              <div class="ico">
+                <div style="width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#f0a24f,#d9701f 78%);box-shadow:0 0 34px rgba(226,135,79,.4),inset 0 1px 0 rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center">
+                  <svg width="58" height="58" viewBox="0 0 48 48" fill="none" style="animation:pl-spin 2.2s linear infinite"><path d="M24 7.5a16.5 16.5 0 1 1-14.9 9.4" stroke="#fff" stroke-width="4.6" stroke-linecap="round"/><path d="M12.5 9.4 13.9 19.2 4.4 14.6Z" fill="#fff"/></svg>
+                </div>
+              </div>
+              <div class="big" style="font:600 14px var(--fn);color:var(--orange)">إعادة تشغيل…</div>
+              <div class="sub" style="color:rgba(255,255,255,.5)" data-t="restartLabel"></div>
+            </div>
+
+            <div class="layer" data-if="isTurningOn" hidden>
+              <div class="abs" style="inset:0;border:1px solid rgba(200,234,69,.18)"></div>
+              <div class="sweep" style="background:conic-gradient(from 0deg,rgba(200,234,69,0) 0deg,rgba(200,234,69,0) 250deg,rgba(200,234,69,.85) 358deg,rgba(200,234,69,0) 360deg);animation:pl-sweep 1.15s linear infinite"></div>
+              <div class="abs" style="inset:10px;background:radial-gradient(circle at 50% 30%,rgba(200,234,69,.16),rgba(200,234,69,0) 70%);animation:pl-settle 1.5s ease-in-out infinite"></div>
+              <div class="ico"><img src="img/off.png" alt="" style="animation:pl-emerge 1.5s ease-in-out infinite"></div>
+              <div class="big" style="color:rgba(255,255,255,.3);animation:pl-settle 1.5s ease-in-out infinite">مفصول</div>
+              <div class="sub" style="font:600 12px var(--fn);color:var(--lime)">بيوصّل الموتور…</div>
+            </div>
+
+            <div class="layer" data-if="isTurningOff" hidden>
+              <div class="abs" style="inset:0;border:1px solid rgba(255,255,255,.1)"></div>
+              <div class="sweep" style="background:conic-gradient(from 0deg,rgba(255,255,255,0) 0deg,rgba(255,255,255,0) 250deg,rgba(255,255,255,.5) 358deg,rgba(255,255,255,0) 360deg);animation:pl-sweep 1.15s linear reverse infinite"></div>
+              <div class="abs" style="inset:10px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.05),rgba(255,255,255,0) 70%);animation:pl-settle 1.5s ease-in-out infinite"></div>
+              <div class="ico"><img src="img/on.png" alt="" style="filter:drop-shadow(0 0 18px rgba(200,234,69,.35));animation:pl-emerge 1.5s ease-in-out infinite"></div>
+              <div class="big" style="color:rgba(244,248,230,.34);animation:pl-settle 1.5s ease-in-out infinite">جاهز</div>
+              <div class="sub" style="font:600 12px var(--fn);color:rgba(255,255,255,.55)">بيفصل الموتور…</div>
+            </div>
+
+            <div class="layer" data-if="isOnState" hidden>
+              <div class="abs" style="inset:0;border:1px solid rgba(200,234,69,.55);box-shadow:0 0 70px rgba(200,234,69,.3),inset 0 0 40px rgba(200,234,69,.1)"></div>
+              <div class="abs" style="inset:10px;background:radial-gradient(circle at 50% 30%,rgba(200,234,69,.2),rgba(200,234,69,.02) 72%)"></div>
+              <div class="ico"><img src="img/on.png" alt="" style="filter:drop-shadow(0 0 22px rgba(200,234,69,.45))"></div>
+              <div class="big" style="color:#f4f8e6">جاهز</div>
+              <div class="sub" style="color:rgba(244,248,230,.62)" data-t="onSub"></div>
+            </div>
+
+            <div class="layer" data-if="isOffState" hidden>
+              <div class="abs" style="inset:0;border:1px solid rgba(255,255,255,.13);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)"></div>
+              <div class="abs" style="inset:10px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.05),rgba(255,255,255,0) 72%)"></div>
+              <div class="ico"><img src="img/off.png" alt="" style="opacity:.9"></div>
+              <div class="big" style="color:rgba(255,255,255,.55)">مفصول</div>
+              <div class="sub" style="color:rgba(255,255,255,.4)" data-t="offSub"></div>
+            </div>
+
+            <div class="layer" data-if="isUnknownState" hidden>
+              <div class="abs" style="inset:0;border:1px dashed rgba(255,255,255,.14)"></div>
+              <div class="ico"><img src="img/off.png" alt="" style="opacity:.35;filter:grayscale(1)"></div>
+              <div class="big" style="color:rgba(255,255,255,.35)">—</div>
+              <div class="sub" style="color:rgba(255,255,255,.4)" data-t="unknownSub"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <div style="height:1px;margin:28px -24px 0;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.09),rgba(255,255,255,0))"></div>
+
+        <div style="display:flex;gap:12px;margin-top:20px">
+          <button class="act on" data-if="restartEnabled" data-click="askRestart" hidden><img src="img/restart.png" alt="" style="width:20px;height:20px;object-fit:contain">إعادة تشغيل</button>
+          <div class="act dis" data-if="restartDisabled" hidden><img src="img/restart.png" alt="" style="width:20px;height:20px;object-fit:contain;opacity:.5;filter:grayscale(1)"><span data-t="restartHint"></span></div>
+        </div>
+      </div>
+
+      <div class="glass info">
+        <div class="row">
+          <span class="k">حالة الموتور</span>
+          <span class="v" data-if="isPendingRow" hidden style="font:600 12.5px var(--fn);color:var(--lime);animation:pl-breathe 1.5s ease-in-out infinite" data-t="powerPendingText"></span>
+          <span class="v" data-if="isOnState" hidden style="color:var(--lime)"><span class="dot" style="width:7px;height:7px;background:var(--lime);box-shadow:0 0 10px var(--lime)"></span>جاهز</span>
+          <span class="v" data-if="isOffState" hidden style="color:rgba(255,255,255,.75)"><span class="dot" style="width:7px;height:7px;background:rgba(255,255,255,.3)"></span>مفصول</span>
+          <span class="v" data-if="isUnknownState" hidden style="color:rgba(255,255,255,.45)">مش معروف</span>
+        </div>
+        <div class="row">
+          <span class="k">وحدة التحكم</span>
+          <span class="v" data-if="isLive" hidden><span class="dot" style="width:7px;height:7px;background:var(--green)"></span>متصلة</span>
+          <span class="v" data-if="isChecking" hidden style="color:rgba(255,255,255,.6)"><span class="spin" style="width:10px;height:10px"></span>بنتأكد…</span>
+          <span class="v" data-if="isStale" hidden style="color:var(--amber)"><span class="dot" style="width:7px;height:7px;background:var(--amber)"></span>قديمة</span>
+          <span class="v" data-if="isNoBroker" hidden style="color:var(--amber)"><span class="dot" style="width:7px;height:7px;background:var(--amber)"></span>مش معروف</span>
+          <span class="v" data-if="isOffline" hidden style="color:var(--orange)"><span class="dot" style="width:7px;height:7px;background:var(--orange)"></span>أوفلاين</span>
+        </div>
+        <div class="row">
+          <span class="k">آخر أمر</span>
+          <span class="v num" data-t="lastLabel"></span>
+        </div>
+      </div>
+
+      <div class="foot ltr" style="margin-top:14px;padding:0 8px;text-align:right">pump-esp32 · home/pump/cmd · QoS 1 · retain off</div>
+    </section>
+
+    <!-- ========== HISTORY ========== -->
+    <section class="screen" data-if="isHistory" hidden>
+      <div style="padding:22px 6px 18px">
+        <div class="eyebrow" style="display:flex;align-items:center;gap:8px"><span class="dot" style="width:6px;height:6px" data-css="background:netDot"></span>بث مباشر</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px">
+          <div class="h1">السجل</div>
+          <button class="logbtn" data-click="openLog" aria-label="Log — التفاصيل الكاملة"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span class="ltr">Log</span></button>
+        </div>
+        <div class="p" style="margin-top:10px;max-width:320px;font-size:13px">أوامر التوصيل والفصل وإعادة التشغيل اللي وصلت لوحدة التحكم، ونتيجة كل أمر. بيظهر بس اللي بيحصل والتطبيق مفتوح. كل التفاصيل التانية في الـ <span class="ltr">Log</span>.</div>
+      </div>
+      <div data-if="noHistory" hidden style="border-radius:26px;padding:26px 20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);font:400 13px/1.7 var(--f);color:rgba(255,255,255,.45)">مفيش أوامر لسه. أي توصيل أو فصل أو إعادة تشغيل — من الموبايل ده أو من أي حد تاني — هيظهر هنا أول ما وحدة التحكم تستلمه.</div>
+      <div class="glass list" data-if="hasHistory" hidden data-list="history"></div>
+    </section>
+
+    <!-- ========== FAMILY ========== -->
+    <section class="screen" data-if="isFamily" hidden>
+      <div style="padding:22px 6px 18px">
+        <div class="eyebrow">الصلاحيات</div>
+        <div class="h1" style="margin-top:8px">العيلة</div>
+        <div class="p" style="margin-top:10px;max-width:300px">كل اللي هنا يقدروا يفصلوا الموتور أو يوصّلوه. أوامرهم بتظهر في السجل والتطبيق مفتوح.</div>
+        <div style="font:400 12.5px/1.75 var(--f);color:rgba(255,255,255,.62);margin-top:12px;max-width:330px">الأدوار بتنظّم العيلة بس، ومش حماية. كل الموبايلات بتستخدم نفس بيانات الدخول للسيرفر، فأي حد معاه البيانات دي يقدر يبعت أوامر للمضخة مباشرة. ده اتفاق بينّا، مش أمان.</div>
+      </div>
+      <div class="glass list" data-list="members"></div>
+      <button class="btn lime" style="margin-top:16px;font-size:13px;background:rgba(200,234,69,.08);border-color:rgba(200,234,69,.25)" data-if="canAddMember" data-click="addMember" hidden>+ ضيف فرد من العيلة</button>
+      <div class="btn disabled" style="margin-top:16px;font:400 12.5px var(--f);color:rgba(255,255,255,.35);border-color:rgba(255,255,255,.06);background:rgba(255,255,255,.02);padding:16px 0" data-if="cannotAddMember" hidden>إضافة الأشخاص للمسؤول بس</div>
+      <div class="foot" style="padding:12px 8px" data-t="inviteHint"></div>
+    </section>
+
+    <!-- ========== SETTINGS ========== -->
+    <section class="screen" data-if="isSettings" hidden>
+      <div style="padding:22px 6px 18px">
+        <button class="back" data-click="closeSettings">→ رجوع</button>
+        <div class="h1" style="margin-top:12px">الإعدادات</div>
+      </div>
+
+      <div class="section" style="padding-top:0">وحدة التحكم</div>
+      <div class="glass list pad20" data-list="controller"></div>
+      <div class="foot" style="padding:10px 8px 0">البيانات دي من آخر رد على «تأكد من وحدة التحكم».</div>
+
+      <div class="section">الاتصال</div>
+      <form id="connForm" class="glass list pad20" autocomplete="on">
+        <div class="field"><label for="set-host">السيرفر</label><input id="set-host" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" data-bind="edit.host"></div>
+        <div class="field"><label for="set-user">اسم المستخدم</label><input id="set-user" autocomplete="username" autocapitalize="off" spellcheck="false" data-bind="edit.user"></div>
+        <div class="field"><label for="set-pass">كلمة السر</label><input id="set-pass" type="password" autocomplete="current-password" data-bind="edit.pass"></div>
+        <div class="field"><label>المنفذ</label><span class="ro">wss · 8884 · /mqtt</span></div>
+        <div class="field"><label>معرّف الموبايل</label><span class="ro" data-t="clientId"></span></div>
+      </form>
+      <button class="btn primary" style="margin-top:12px" data-if="connDirty" data-click="saveConn" hidden>احفظ وأعد الاتصال</button>
+      <div class="foot" style="padding:10px 8px 0">بتتحفظ على الموبايل ده بس. الأوامر بتتبعت على <span class="ltr">home/pump/cmd</span> · والحالة بتيجي على <span class="ltr">home/pump/state</span></div>
+
+      <button class="btn danger" style="margin-top:18px" data-click="clearConn" data-t="clearConnText"></button>
+      <button class="btn danger" style="margin-top:10px" data-click="signOut" data-t="signOutText"></button>
+      <div class="foot" style="padding:12px 8px" data-t="versionLine"></div>
+    </section>
+
+  </main>
+
+  <nav class="tabs" data-if="showTabs" hidden data-list="tabs"></nav>
+
+  <div class="sheet-bg" data-if="showConfirm" hidden data-click="cancelRestart">
+    <div class="sheet" data-click="noop">
+      <div style="display:flex;align-items:center;gap:12px">
+        <img src="img/restart.png" alt="" style="width:34px;height:34px;object-fit:contain">
+        <div style="font:700 12px var(--fn);color:var(--orange)">أمر بيفصل الموتور</div>
+      </div>
+      <div style="font:600 25px/1.4 var(--f);color:#fff;margin-top:14px">نعمل إعادة تشغيل؟</div>
+      <div style="font:400 13.5px/1.75 var(--f);color:rgba(255,255,255,.55);margin-top:10px">الموتور هيتفصل <span class="ltr">6</span> ثواني وبعدين يرجع جاهز لوحده. التطبيق هيتقفل عند كل أهل البيت لحد ما تخلص.</div>
+      <div style="display:flex;gap:10px;margin-top:24px">
+        <button data-click="cancelRestart" style="flex:1;text-align:center;padding:15px 0;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font:400 13px var(--f);color:rgba(255,255,255,.8)">إلغاء</button>
+        <button data-click="confirmRestart" style="flex:1;text-align:center;padding:15px 0;border-radius:18px;background:rgba(200,234,69,.16);border:1px solid rgba(200,234,69,.4);font:500 13px var(--f);color:var(--lime-soft)">إعادة تشغيل</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sheet-bg" data-if="showLog" hidden data-click="closeLog">
+    <div class="sheet logsheet" data-click="noop" role="dialog" aria-label="Log">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <div style="display:flex;align-items:center;gap:9px;color:#fff">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>
+          <span class="ltr" style="font:600 18px var(--fn);letter-spacing:.04em">Log</span>
+          <span style="font:500 11.5px var(--fn);color:rgba(255,255,255,.4)" data-t="logCount"></span>
+        </div>
+        <button data-click="closeLog" aria-label="إغلاق" style="padding:4px 8px;font:600 14px var(--fn);color:rgba(255,255,255,.55)">✕</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px">
+        <div class="seg" data-list="logseg"></div>
+        <div style="display:flex;gap:8px">
+          <button class="mini rm" data-click="clearLog" data-t="clearText"></button>
+          <button class="mini lime" data-click="copyLog" data-t="copyText"></button>
+        </div>
+      </div>
+      <div class="logbody" id="logbody" data-list="logview"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+'use strict';
+
+/* =====================================================================
+   PumpLink — static PWA front end for the ESP32 pump power controller.
+   Talks to HiveMQ Cloud over MQTT/WebSocket (wss, port 8884, /mqtt).
+   Nothing secret lives in this file: credentials are typed in on first
+   run and kept in this phone's localStorage only.
+   ===================================================================== */
+
+const CFG = {
+  PORT: 8884,
+  PATH: '/mqtt',
+  T: {
+    cmd: 'home/pump/cmd',        // we publish, QoS 1, retain FALSE — always
+    state: 'home/pump/state',    // retained ON / OFF, the real contactor reading
+    avail: 'home/pump/avail',    // retained online / offline (broker's last will)
+    hb: 'home/pump/hb',          // NOT retained, uptime every 60 s — proof of life
+    status: 'home/pump/status',  // NOT retained, JSON reply to STATUS
+    log: 'home/pump/log',        // NOT retained, one firmware log line per message
+    users: 'home/pump/users'     // retained roster, owned by this app
+  },
+  STALE_MS: 150000,       // 2.5 heartbeat intervals with nothing heard -> stale
+  ACK_MS: 5000,           // a command must be confirmed by home/pump/state within this
+  RESTART_MS: 6000,       // firmware RESTART_DELAY_MS
+  CONFIRM_MS: 1000,       // firmware STATE_CONFIRM_MS
+  CHECK_MS: 3000,         // STATUS must be answered within this
+  ROSTER_WAIT_MS: 2000,   // no retained roster by then -> nobody has registered
+  FLAP_MS: 5000,          // an 'offline' must survive this long before we cross-check it
+  UNPROMPTED_MS: 10000,   // a state change this long after any command did not come from an app
+  NAME_MAX_BYTES: 23,     // firmware keeps the name in char lastUser[24]
+  PUMP_NAME: 'موتور بيت الدماصي',
+  VERSION: '1.1'
+};
+
+const LS = { conn: 'pumplink.conn', name: 'pumplink.name', device: 'pumplink.device' };
+
+/* ---------- storage (every access guarded: private mode, blocked storage) ---------- */
+const store = {
+  get(k) { try { const v = localStorage.getItem(k); return v == null ? null : JSON.parse(v); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+function hex(n) { const a = new Uint8Array(n); crypto.getRandomValues(a); return Array.from(a, b => b.toString(16).padStart(2, '0')).join(''); }
+
+// Client ID: a per-device part kept in localStorage, plus a per-tab part so the
+// installed app and a browser tab on the same phone never take over each other's
+// session (two clients with one ID kick each other off in a loop).
+let deviceId = store.get(LS.device);
+if (typeof deviceId !== 'string' || !/^[0-9a-f]{6}$/.test(deviceId)) { deviceId = hex(3); store.set(LS.device, deviceId); }
+let tabId = null;
+try { tabId = sessionStorage.getItem('pumplink.tab'); } catch (e) {}
+if (!tabId) { tabId = hex(2); try { sessionStorage.setItem('pumplink.tab', tabId); } catch (e) {} }
+const CLIENT_ID = 'pumplink-' + deviceId + '-' + tabId;
+
+function validConn(c) { return c && typeof c === 'object' && typeof c.host === 'string' && c.host && typeof c.user === 'string' && typeof c.pass === 'string'; }
+
+/* ---------- state ---------- */
+const now = () => Date.now();
+const S = {
+  stage: 'setup', tab: 'home', addMode: 'self', draft: '',
+  conn: null, name: null,
+  setup: { host: '', user: '', pass: '' }, setupBusy: false, setupErr: '',
+  edit: { host: '', user: '', pass: '' },
+  net: 'idle',
+  armed: null, confirm: false, toast: null,
+  logLang: store.get('pumplink.logLang') === 'en' ? 'en' : 'ar'
+};
+function resetRuntime() {
+  Object.assign(S, {
+    subscribedAt: 0, roster: {}, rosterKnown: false,
+    power: null, aliveAt: 0, noAnswer: false,
+    avail: null, availAt: 0, status: null, statusAt: 0, check: null,
+    pending: null, restart: null, fault: null, error: null, manual: null,
+    lastCmd: null, lastCmdAt: 0, feedbackSinceCmd: true,
+    cmds: [], openCmds: [], dbg: [], prevFresh: null, confirm: false, toast: null,
+    showLog: false, copied: false, checkSentAt: 0
+  });
+}
+resetRuntime();
+
+const savedConn = store.get(LS.conn);
+const savedName = store.get(LS.name);
+if (validConn(savedConn)) {
+  S.conn = savedConn;
+  S.name = typeof savedName === 'string' && savedName ? savedName : null;
+  S.stage = S.name ? 'app' : 'signin';
+}
+
+/* ---------- timers ---------- */
+const timers = {};
+function clearT(k) { clearTimeout(timers[k]); timers[k] = null; }
+function later(k, ms, fn) { clearT(k); timers[k] = setTimeout(() => { timers[k] = null; fn(); render(); }, ms); }
+
+/* ---------- history (in memory only, cleared when the app closes) ---------- */
+let seq = 0;
+// Two separate records, both in memory only:
+//   S.cmds — History tab: only ON / OFF / RESTART as the controller logged receiving them
+//   S.dbg  — Log window: everything (firmware lines, MQTT in/out, app events), for debugging
+function dbg(src, ar, en, tone) {
+  S.dbg.push({ id: ++seq, at: now(), src, ar, en: en == null ? ar : en, tone: tone || '' });
+  if (S.dbg.length > 500) S.dbg.splice(0, S.dbg.length - 500);
+}
+function appLog(ar, en, tone) { dbg('app', ar, en, tone); }
+function addCmd(kind, who) {
+  const it = { id: ++seq, kind, who, at: now(), result: 'pending' };
+  S.cmds.unshift(it); if (S.cmds.length > 80) S.cmds.length = 80;
+  S.openCmds.push(it);
+}
+// The firmware confirms only the latest command (one confirmPending flag), so a
+// confirmation closes the newest open item; anything older can no longer be judged.
+function resolveCmd(result) {
+  const it = S.openCmds.pop(); if (it) it.result = result;
+  S.openCmds.forEach(x => { if (x.result === 'pending') x.result = 'unknown'; });
+  S.openCmds = [];
+}
+const L = t => '\u2066' + t + '\u2069';   // LRI…PDI: keep a technical fragment left-to-right inside Arabic
+const CMD_AR = { ON: 'توصيل', OFF: 'فصل', RESTART: 'إعادة تشغيل', STATUS: 'استعلام حالة' };
+function fwAr(line) {
+  let m;
+  if ((m = /^cmd: \[([A-Z]+)\] from (.*)$/.exec(line))) return 'أمر ' + (CMD_AR[m[1]] || L(m[1])) + ' من ' + (m[2] === 'unknown' ? 'من غير اسم' : m[2]);
+  if ((m = /^feedback: (ON|OFF)$/.exec(line))) return 'قراءة الكونتاكتور: ' + (m[1] === 'ON' ? 'جاهز' : 'مفصول');
+  if ((m = /^state after cmd: measured=(ON|OFF) commanded=(ON|OFF)(.*MISMATCH)?/.exec(line)))
+    return 'الحالة بعد الأمر: المقاسة ' + (m[1] === 'ON' ? 'جاهز' : 'مفصول') + '، المطلوبة ' + (m[2] === 'ON' ? 'جاهز' : 'مفصول') + (m[3] ? ' ← مش متطابقين' : '');
+  if (line === 'restart complete') return 'إعادة التشغيل خلصت';
+  if (/^restart already in progress/.test(line)) return 'فيه إعادة تشغيل جارية — الأمر اتجاهل';
+  if (line === 'mqtt connected') return 'اتصلت بالسيرفر (MQTT)';
+  if (line === 'failed to connect to internet') return 'فشل الاتصال بالنت';
+  if (/^WiFi disconnected/.test(line)) return 'الواي فاي فصل — بتعيد الاتصال';
+  if ((m = /^connecting to WiFi: (.*)$/.exec(line))) return 'بتتصل بالشبكة: ' + L(m[1]);
+  if ((m = /^connected to: (.*)$/.exec(line))) return 'اتصلت بالشبكة: ' + L(m[1]);
+  if ((m = /^IP: (.*)$/.exec(line))) return 'عنوان ' + L('IP: ' + m[1]);
+  if ((m = /^fw (\S+) \(built (.*)\)$/.exec(line))) return 'البرنامج ' + L(m[1]) + ' (اتبنى ' + L(m[2]) + ')';
+  if ((m = /^cpu: (\d+) MHz \((.*)\)$/.exec(line))) return 'المعالج: ' + L(m[1] + ' MHz') + ' (' + (m[2] === 'idle' ? 'خامل' : m[2] === 'command received' ? 'وصل أمر' : m[2]) + ')';
+  if ((m = /^ota: (.*)$/.exec(line))) return 'تحديث OTA: ' + L(m[1]);
+  return L(line);
+}
+function rxAr(topic, txt, retained) {
+  const r = retained ? ' (محفوظة)' : '';
+  const v = txt.trim();
+  if (topic === CFG.T.state) return 'الحالة: ' + (v.toUpperCase() === 'ON' ? 'جاهز' : v.toUpperCase() === 'OFF' ? 'مفصول' : v) + r;
+  if (topic === CFG.T.avail) return L('avail') + ': ' + (v === 'online' ? 'متصلة' : v === 'offline' ? 'مفصولة' : v) + r;
+  if (topic === CFG.T.hb) return 'نبضة: شغالة من ' + (isFinite(Number(v)) ? uptime(Number(v)) : v);
+  if (topic === CFG.T.status) return 'رد ' + L('STATUS') + ': ' + L(v);
+  if (topic === CFG.T.users) return 'قائمة العيلة: ' + (v ? L(v) : '(فاضية)') + r;
+  return L(topic + ': ' + v);
+}
+function showToast(name, title) { S.toast = { name, title }; later('toast', 5000, () => { S.toast = null; }); }
+
+/* =====================================================================
+   MQTT
+   ===================================================================== */
+let client = null;
+
+function brokerUrl(host) {
+  host = String(host || '').trim();
+  if (/^wss?:\/\//i.test(host)) return host;   // a full URL was pasted: use it as given
+  host = host.replace(/^https?:\/\//i, '').replace(/\/.*$/, '').replace(/:\d+$/, '');
+  return 'wss://' + host + ':' + CFG.PORT + CFG.PATH;
+}
+function isAuthError(err) { return !!err && [4, 5, 134, 135].indexOf(err.code) >= 0; }
+
+function disconnect() {
+  const c = client; client = null;
+  if (c) { try { c.end(true); } catch (e) {} }
+  S.net = 'idle';
+}
+
+function connect(conn, trial) {
+  disconnect();
+  S.subscribedAt = 0;
+  if (typeof mqtt === 'undefined') {
+    S.net = 'nolib';
+    if (trial) { S.setupBusy = false; S.setupErr = 'مكتبة MQTT ما اتحمّلتش. اتأكد إن النت شغال وافتح التطبيق تاني.'; }
+    return;
+  }
+  S.net = 'connecting';
+  let c;
+  try {
+    c = mqtt.connect(brokerUrl(conn.host), {
+      clientId: CLIENT_ID,
+      username: conn.user,
+      password: conn.pass,
+      clean: true,
+      keepalive: 30,
+      protocolVersion: 4,
+      connectTimeout: 10000,
+      reconnectPeriod: trial ? 0 : 4000,
+      resubscribe: false        // we subscribe ourselves on every connect
+    });
+  } catch (e) {
+    S.net = 'down';
+    if (trial) { S.setupBusy = false; S.setupErr = 'عنوان السيرفر مش مظبوط.'; }
+    return;
+  }
+  client = c;
+  let everConnected = false;
+  appLog('بيتصل بالسيرفر', 'Connecting to ' + brokerUrl(conn.host) + ' as "' + conn.user + '", client ' + CLIENT_ID);
+
+  c.on('connect', () => {
+    if (c !== client) return;
+    everConnected = true;
+    S.net = 'up';
+    if (trial) { trial = false; c.options.reconnectPeriod = 4000; onTrialSuccess(conn); }
+    appLog('اتصلنا بالسيرفر · بنشترك في المواضيع', 'Connected to broker · subscribing', 'ok');
+    const topics = {};
+    [CFG.T.state, CFG.T.avail, CFG.T.hb, CFG.T.status, CFG.T.log, CFG.T.users].forEach(t => { topics[t] = { qos: 1 }; });
+    c.subscribe(topics, (err) => {
+      if (c !== client) return;
+      if (err) { appLog('الاشتراك في المواضيع فشل', 'Subscribe failed: ' + (err.message || err), 'bad'); render(); return; }
+      S.subscribedAt = now();
+      if (!S.rosterKnown) later('roster', CFG.ROSTER_WAIT_MS, () => { S.rosterKnown = true; });
+      sendStatus();      // every open and every reconnect: never trust the retained state alone
+      render();
+    });
+    render();
+  });
+  c.on('reconnect', () => { if (c !== client) return; if (S.net !== 'auth') S.net = 'connecting'; appLog('بنحاول نتصل تاني', 'Reconnecting…'); render(); });
+  c.on('close', () => {
+    if (c !== client) return;
+    if (S.net === 'up') appLog('الاتصال بالسيرفر اتقطع', 'Broker connection closed', 'bad');
+    if (S.net !== 'auth') S.net = 'down';
+    if (trial && !everConnected && S.setupBusy) {
+      clearT('trial'); S.setupBusy = false;
+      if (!S.setupErr) S.setupErr = 'مقدرناش نوصل للسيرفر. اتأكد من العنوان (زي xxxxxxxx.s1.eu.hivemq.cloud من غير https ولا بورت) ومن النت.';
+      disconnect();
+    }
+    render();
+  });
+  c.on('error', (err) => {
+    if (c !== client) return;
+    appLog('خطأ اتصال: ' + L(String(err && err.message)), 'MQTT error: ' + (err && err.message) + (err && err.code != null ? ' (code ' + err.code + ')' : ''), 'bad');
+    if (isAuthError(err)) {
+      S.net = 'auth';
+      if (trial) { clearT('trial'); S.setupBusy = false; S.setupErr = 'السيرفر رفض اسم المستخدم أو كلمة السر.'; }
+      try { c.end(true); } catch (e) {}
+      render();
+    }
+  });
+  c.on('message', onMessage);
+}
+
+function onTrialSuccess(conn) {
+  clearT('trial');
+  S.setupBusy = false; S.setupErr = '';
+  S.conn = { host: conn.host, user: conn.user, pass: conn.pass };
+  store.set(LS.conn, S.conn);
+  S.stage = S.name ? 'app' : 'signin';
+  S.tab = 'home';
+}
+
+// The ONE place that publishes to home/pump/cmd.
+// retain MUST stay false: a retained command would be replayed to the ESP32 on
+// every reconnect and could switch the pump by itself after a power cut.
+function publishCmd(payload) {
+  if (!client || S.net !== 'up') return false;
+  client.publish(CFG.T.cmd, payload, { qos: 1, retain: false });
+  dbg('tx', 'إرسال على ' + L('cmd') + ': ' + L(payload), 'cmd <- "' + payload + '"  (QoS 1, retain false)');
+  return true;
+}
+
+function writeRoster(next) {
+  if (!client || S.net !== 'up') return false;
+  client.publish(CFG.T.users, JSON.stringify(next), { qos: 1, retain: true });
+  dbg('tx', 'تحديث قائمة العيلة: ' + L(JSON.stringify(next)), 'users <- ' + JSON.stringify(next) + '  (QoS 1, retain true)');
+  S.roster = next;
+  return true;
+}
+
+/* ---------- STATUS: the definitive "is it there right now" check ---------- */
+function sendStatus() {
+  if (S.check === 'checking') return;
+  if (!publishCmd('STATUS')) return;
+  S.check = 'checking'; S.checkSentAt = now();
+  clearT('checkClear');
+  later('check', CFG.CHECK_MS, () => {
+    if (S.check !== 'checking') return;
+    S.check = 'none'; S.noAnswer = true;
+    appLog(L('STATUS') + ': مفيش رد خلال 3 ث', 'STATUS: no reply within 3 s', 'bad');
+    later('checkClear', 5000, () => { if (S.check === 'none') S.check = null; });
+  });
+}
+
+function markAlive() { S.aliveAt = now(); S.noAnswer = false; }
+
+/* ---------- incoming ---------- */
+function onMessage(topic, buf, packet) {
+  const txt = String(buf);
+  const live = !packet.retain;   // a retained replay is a reading, not proof that anyone is alive
+  if (topic !== CFG.T.log) {
+    const tone = topic === CFG.T.avail && /offline/i.test(txt) ? 'warn' : '';
+    dbg('rx', rxAr(topic, txt, packet.retain), topic.replace('home/pump/', '') + (packet.retain ? ' [retained]' : '') + ': ' + txt.trim(), tone);
+  }
+  switch (topic) {
+    case CFG.T.state: onState(txt.trim().toUpperCase(), live); break;
+    case CFG.T.avail: onAvail(txt.trim().toLowerCase(), live); break;
+    case CFG.T.hb: if (live) markAlive(); break;
+    case CFG.T.status: if (live) onStatus(txt); break;
+    case CFG.T.log: if (live) { markAlive(); onLog(txt.replace(/\s+$/, '')); } break;
+    case CFG.T.users: onRoster(txt); break;
+  }
+  render();
+}
+
+function onState(v, live) {
+  if (v !== 'ON' && v !== 'OFF') return;
+  const prev = S.power;
+  S.power = v;
+  if (!live) return;
+  markAlive();
+
+  const r = S.restart;
+  if (r) {
+    if (v === 'OFF') { r.sawOff = true; return; }
+    // Unlock from the confirmed reading, never from the countdown.
+    // sawOff: we watched the cut, so this ON is the restore. unknownTiming: opened
+    // mid-cycle, the cut may have happened before we subscribed.
+    if (r.completeLogged || r.sawOff || r.unknownTiming || now() >= r.endsAt - 1000) finishRestart();
+    return;
+  }
+  const p = S.pending;
+  if (p) {
+    if (v === p.want) { clearT('ack'); S.pending = null; S.fault = null; S.error = null; }
+    else p.wrongState = true;    // answered, but not what we asked for: wait for the MISMATCH line
+    return;
+  }
+  if (S.fault && v === S.fault.want) S.fault = null;
+  if (prev && prev !== v && now() - S.lastCmdAt > CFG.UNPROMPTED_MS) S.manual = { power: v };
+}
+
+function onAvail(v, live) {
+  if (v !== 'online' && v !== 'offline') return;
+  const changed = v !== S.avail;
+  S.avail = v;
+  if (changed || !S.availAt) S.availAt = now();
+  if (!live) return;
+  if (v === 'online') markAlive();
+  if (changed) {
+    // One 'offline' is not conclusive (a fast reconnect publishes the old session's
+    // will). If it is still standing after FLAP_MS, ask the controller directly.
+    if (v === 'offline') later('availCheck', CFG.FLAP_MS, () => {
+      if (S.avail === 'offline' && !(S.aliveAt > S.availAt)) sendStatus();
+    });
+  }
+}
+
+function onStatus(txt) {
+  let o;
+  try { o = JSON.parse(txt); } catch (e) { return; }
+  if (!o || typeof o !== 'object') return;
+  markAlive();
+  S.status = o; S.statusAt = now();
+  if (S.check === 'checking') {
+    clearT('check'); S.check = 'ok';
+    appLog(L('STATUS') + ': رد بعد ' + L((now() - S.checkSentAt) + ' ms'), 'STATUS: reply in ' + (now() - S.checkSentAt) + ' ms', 'ok');
+    later('checkClear', 5000, () => { if (S.check === 'ok') S.check = null; });
+  }
+  const st = String(o.state || '').toUpperCase();
+  if ((st === 'ON' || st === 'OFF') && !S.pending) {
+    S.power = st;
+    if (S.fault && st === S.fault.want) S.fault = null;
+  }
+  if (o.restarting === true && !S.restart) {
+    // Opened mid-restart. The reply cannot say who started it or how long is left
+    // (last_user is overwritten by our own STATUS), so lock with 6 s as an upper bound.
+    startRestart({ by: null, mine: false, unknownTiming: true });
+    appLog('وحدة التحكم في نص إعادة تشغيل · التحكم اتقفل', 'STATUS restarting=true -> controls locked (<=6 s, starter unknown)', 'warn');
+  } else if (o.restarting === false && S.restart && now() - S.restart.startAt > 1500 && st === 'ON') {
+    finishRestart();
+  }
+}
+
+function onRoster(txt) {
+  let o = {};
+  if (txt.trim()) {
+    try { const p = JSON.parse(txt); if (p && typeof p === 'object' && !Array.isArray(p)) o = p; } catch (e) {}
+  }
+  const clean = {};
+  Object.keys(o).forEach(k => { if (k.trim() && k.length <= 40) clean[k] = o[k] === 'admin' ? 'admin' : 'user'; });
+  S.roster = clean;
+  S.rosterKnown = true;
+  clearT('roster');
+}
+
+// Firmware log lines (pump_minimal.ino):
+//   cmd: [ON] from محمد            state after cmd: measured=ON commanded=ON[   <-- MISMATCH]
+//   feedback: ON                    restart complete
+//   restart already in progress - ignored
+function onLog(line) {
+  const t = now();
+  dbg('fw', fwAr(line), line, /MISMATCH|failed|FAILED/.test(line) ? 'bad' : /ignored|disconnected/.test(line) ? 'warn' : '');
+  let m = /^cmd: \[([A-Z]+)\] from (.*)$/.exec(line);
+  if (m) {
+    const cmd = m[1], who = m[2];
+    if (cmd === 'STATUS') return;                       // our own "is it there" pings: noise
+    if (cmd !== 'ON' && cmd !== 'OFF' && cmd !== 'RESTART') return;
+    const kind = cmd.toLowerCase();
+    S.lastCmd = { kind, who, at: t }; S.lastCmdAt = t; S.feedbackSinceCmd = false;
+    addCmd(kind, who);
+    if (kind === 'restart') {
+      const r = S.restart;
+      if (r && r.mine && !r.sawCmd && who === S.name) { r.sawCmd = true; return; }
+      if (r) return;                                    // already locked; the firmware refuses repeats
+      startRestart({ by: who, mine: false });           // someone else's restart: every app locks
+      showToast(who, who + ' بدأ إعادة تشغيل');
+      return;
+    }
+    const p = S.pending;
+    if (p && p.kind === kind && who === S.name && !p.gotCmd) { p.gotCmd = true; return; }
+    S.manual = null;
+    showToast(who, kind === 'on' ? who + ' وصّل الموتور' : who + ' فصل الموتور');
+    return;
+  }
+  if (/^restart already in progress/.test(line)) {
+    const last = S.openCmds.pop(); if (last) last.result = 'ignored';
+    const r = S.restart;
+    if (r && r.mine) { r.mine = false; r.by = null; r.ignored = true; }
+    return;
+  }
+  if (line === 'restart complete') { if (S.restart) S.restart.completeLogged = true; return; }
+  m = /^state after cmd: measured=(ON|OFF) commanded=(ON|OFF)(.*MISMATCH)?/.exec(line);
+  if (m) {
+    if (m[3]) {
+      S.fault = { want: m[2], measured: m[1] };
+      resolveCmd('fault');
+      if (S.pending) { clearT('ack'); S.pending = null; }
+      if (S.restart) finishRestart();
+    } else {
+      resolveCmd('ok');
+    }
+    return;
+  }
+  m = /^feedback: (ON|OFF)$/.exec(line);
+  if (m) { S.feedbackSinceCmd = true; return; }
+}
+
+/* =====================================================================
+   Commands — no optimistic UI: the display changes only when
+   home/pump/state confirms what the hardware did.
+   ===================================================================== */
+function fresh() {
+  if (S.net !== 'up') return 'nobroker';
+  const t = now(), alive = S.aliveAt;
+  const availOff = S.avail === 'offline' && !(alive > S.availAt);
+  if (availOff && (S.noAnswer || t - S.availAt >= CFG.FLAP_MS + CFG.CHECK_MS)) return 'offline';
+  if (alive && t - alive < CFG.STALE_MS) return 'live';
+  if (!alive) {
+    if (!S.subscribedAt || S.check === 'checking' || t - S.subscribedAt < CFG.CHECK_MS) return 'checking';
+    return availOff ? 'offline' : 'stale';
+  }
+  return 'stale';
+}
+function locked() { const f = fresh(); return f === 'nobroker' || f === 'offline' || !!S.pending || !!S.restart; }
+
+function sendPower(kind) {
+  if (locked() || !S.name) return;
+  const want = kind === 'on' ? 'ON' : 'OFF';
+  if (!publishCmd(want + ':' + S.name)) return;
+  S.pending = { kind, want, at: now(), gotCmd: false, wrongState: false };
+  S.error = null; S.toast = null; S.manual = null;
+  S.lastCmdAt = now();
+  later('ack', CFG.ACK_MS, () => {
+    const p = S.pending; if (!p) return;
+    S.pending = null;
+    if (p.wrongState) { S.fault = { want: p.want }; appLog('عطل: الحالة ماتبعتش الأمر', 'Fault: state did not follow ' + p.want, 'bad'); return; }
+    S.error = {
+      kind: p.kind,
+      text: p.gotCmd
+        ? 'وحدة التحكم استلمت الأمر، بس مبعتتش الحالة الجديدة خلال 5 ثواني. اللي ظاهر هو آخر قراءة مؤكدة.'
+        : 'وحدة التحكم مأكدتش الأمر خلال 5 ثواني. اللي ظاهر هو آخر قراءة مؤكدة، ومفيش حاجة اتغيرت.'
+    };
+    appLog('الأمر ماتأكدش خلال 5 ث', 'Command not acknowledged within 5 s' + (p.gotCmd ? ' (board logged it, no state followed)' : ' (no cmd log line, no state)'), 'warn');
+  });
+}
+
+function sendRestart() {
+  if (locked() || S.power !== 'ON' || !S.name) return;
+  if (!publishCmd('RESTART:' + S.name)) return;
+  S.error = null; S.toast = null; S.manual = null;
+  S.lastCmdAt = now();
+  startRestart({ by: S.name, mine: true });
+}
+
+function startRestart(o) {
+  const t = now();
+  S.restart = { by: o.by, mine: !!o.mine, unknownTiming: !!o.unknownTiming, startAt: t, endsAt: t + CFG.RESTART_MS, sawCmd: false, sawOff: false, completeLogged: false, ignored: false };
+  S.confirm = false; S.pending = null; clearT('ack');
+  if (o.mine) later('rAck', CFG.ACK_MS, () => {
+    const r = S.restart;
+    if (!r || !r.mine || r.sawCmd || r.sawOff) return;
+    S.restart = null; clearT('rEnd');
+    S.error = { kind: 'restart', text: 'وحدة التحكم مأكدتش أمر إعادة التشغيل خلال 5 ثواني. الموتور ما اتفصلش.' };
+    appLog('إعادة التشغيل ماتأكدتش خلال 5 ث', 'RESTART not acknowledged within 5 s', 'warn');
+  });
+  later('rEnd', CFG.RESTART_MS + CFG.CONFIRM_MS + CFG.ACK_MS, () => {
+    if (!S.restart) return;
+    S.restart = null; clearT('rAck');
+    S.error = { kind: null, text: 'إعادة التشغيل المفروض خلصت، بس وحدة التحكم مأكدتش إن الموتور رجع جاهز. دوس «تأكد من وحدة التحكم».' };
+    appLog('نهاية إعادة التشغيل ماتأكدتش', 'Restart end not confirmed (no state ON)', 'warn');
+  });
+}
+function finishRestart() { clearT('rAck'); clearT('rEnd'); S.restart = null; }
+
+/* =====================================================================
+   Roster & names
+   ===================================================================== */
+function adminNames() {
+  const keys = Object.keys(S.roster);
+  const a = keys.filter(k => S.roster[k] === 'admin');
+  return a.length ? a : keys.slice(0, 1);
+}
+function isAdminName(n) { return adminNames().indexOf(n) >= 0; }
+function isAdmin() { return !!S.name && isAdminName(S.name); }
+function cleanName(raw) { return String(raw || '').trim().replace(/\s+/g, ' '); }
+function nameError(raw) {
+  const n = cleanName(raw);
+  if (Array.from(n).length < 2) return 'short';
+  if (/["\\\u0000-\u001f]/.test(n)) return 'الاسم مينفعش يكون فيه " أو \\ .';
+  if (new TextEncoder().encode(n).length > CFG.NAME_MAX_BYTES) return 'الاسم طويل على وحدة التحكم: الحد ' + CFG.NAME_MAX_BYTES + ' بايت، يعني حوالي 11 حرف عربي.';
+  const low = n.toLowerCase();
+  if (low === 'unknown' || low === 'none') return 'الاسم ده محجوز لوحدة التحكم.';
+  if (Object.keys(S.roster).some(k => k.toLowerCase() === low)) {
+    return S.addMode === 'self' ? 'الاسم ده متسجل قبل كده. لو ده إنت، ارجع واختاره من القائمة.' : 'الاسم ده موجود في العيلة قبل كده.';
+  }
+  return '';
+}
+function signInAs(n) { S.name = n; store.set(LS.name, n); S.stage = 'app'; S.tab = 'home'; S.draft = ''; }
+function createProfile() {
+  const n = cleanName(S.draft);
+  if (nameError(n) || S.net !== 'up' || !S.rosterKnown) return;
+  const next = Object.assign({}, S.roster);
+  if (S.addMode === 'member') {
+    next[n] = 'user';
+    if (writeRoster(next)) { S.stage = 'app'; S.tab = 'family'; S.draft = ''; }
+    return;
+  }
+  // First name on an empty roster becomes admin. Two phones registering in the
+  // same second is a last-write-wins race — accepted for a household.
+  next[n] = Object.keys(S.roster).length === 0 ? 'admin' : 'user';
+  if (writeRoster(next)) signInAs(n);
+}
+
+/* =====================================================================
+   View model
+   ===================================================================== */
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const initial = n => { const ch = Array.from(String(n || '').trim())[0] || '?'; return ch.toUpperCase(); };
+const pad = n => String(n).padStart(2, '0');
+const clock = t => { const d = new Date(t); return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()); };
+function ago(sec) { if (sec < 60) return sec + ' ث'; if (sec < 3600) return Math.floor(sec / 60) + ' د'; return Math.floor(sec / 3600) + ' س'; }
+function rel(ms) { const m = Math.floor(ms / 60000); if (m < 1) return 'دلوقتي'; if (m < 60) return 'من ' + m + ' د'; return 'من ' + Math.floor(m / 60) + ' س'; }
+function uptime(s) {
+  s = Math.max(0, Math.floor(s));
+  const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+  if (d) return d + ' يوم ' + h + ' س';
+  if (h) return h + ' س ' + m + ' د';
+  return m + ' د ' + (s % 60) + ' ث';
+}
+function rssiVerdict(r) { if (r >= -70) return 'كويسة'; if (r >= -80) return 'متوسطة'; if (r >= -88) return 'ضعيفة جداً'; return 'ميتة'; }
+
+function view() {
+  const t = now(), f = fresh(), app = S.stage === 'app';
+  const r = S.restart, p = S.pending, busy = !!(p || r);
+  const left = r ? Math.max(0, Math.ceil((r.endsAt - t) / 1000)) : 0;
+  const waiting = !!r && t >= r.endsAt;
+  const lk = locked();
+  const adm = isAdmin();
+  const rosterN = Object.keys(S.roster).length;
+  const known = S.power === 'ON' || S.power === 'OFF';
+  const lockedSub = f === 'offline' ? 'مقفول · وحدة التحكم أوفلاين' : f === 'nobroker' ? 'مقفول · مش متصل بالسيرفر' : f === 'stale' ? 'ممكن تكون قديمة' : null;
+  const draftErr = S.stage === 'signup' ? nameError(S.draft) : '';
+  const heard = S.aliveAt ? Math.floor((t - S.aliveAt) / 1000) : 0;
+  const filled = !!(S.setup.host.trim() && S.setup.user.trim() && S.setup.pass);
+  const connDirty = !!S.conn && (S.edit.host !== S.conn.host || S.edit.user !== S.conn.user || S.edit.pass !== S.conn.pass) && !!(S.edit.host.trim() && S.edit.user.trim() && S.edit.pass);
+  const netReady = S.net === 'up' && S.rosterKnown;
+  const st = S.status || {};
+  const netDot = S.stage !== 'app'
+    ? (S.net === 'up' ? 'rgba(200,234,69,.8)' : S.net === 'auth' ? '#ef8f7a' : '#e2b04f')
+    : (f === 'offline' || f === 'nobroker' ? '#ef8f7a' : f === 'stale' || f === 'checking' ? '#e2b04f' : 'rgba(200,234,69,.8)');
+
+  return {
+    netDot,
+    netText: { connecting: 'بيتصل…', down: 'مقطوع', auth: 'البيانات غلط', nolib: 'المكتبة ناقصة' }[S.net] || '',
+    pumpName: CFG.PUMP_NAME,
+    clientId: CLIENT_ID,
+
+    // setup
+    isSetup: S.stage === 'setup',
+    showSetupErr: !!S.setupErr && !S.setupBusy, setupErr: S.setupErr,
+    canConnect: !S.setupBusy && filled, setupBusy: S.setupBusy, cannotConnect: !S.setupBusy && !filled,
+
+    // sign in
+    isSignIn: S.stage === 'signin',
+    rosterLoading: !S.rosterKnown,
+    rosterLoadingText: S.net === 'auth' ? 'السيرفر رفض بيانات الدخول المحفوظة على الموبايل ده.'
+      : S.net === 'up' ? 'بنجيب أسماء البيت من السيرفر…' : 'بيتصل بالسيرفر…',
+    signinAuthFail: S.net === 'auth',
+    firstRun: S.rosterKnown && rosterN === 0,
+    rosterReady: S.rosterKnown && S.net === 'up',
+    signinCta: rosterN === 0 ? 'أنشئ أول مستخدم (مسؤول)' : '+ ضيفني على البيت ده',
+
+    // sign up
+    isSignUp: S.stage === 'signup',
+    signupTitle: S.addMode === 'member' ? 'ضيف فرد من العيلة' : 'اكتب اسمك',
+    signupHint: S.addMode === 'member'
+      ? 'هيظهر في قائمة العيلة وفي السجل بالاسم ده. إنت هتفضل داخل باسم ' + (S.name || '') + '.'
+      : 'بيتسأل مرة واحدة بس على الموبايل ده. اسمك بيتكتب على كل أمر تبعته.',
+    signupCta: S.addMode === 'member' ? 'ضيفه للعيلة' : 'ادخل التطبيق',
+    canCreate: !draftErr && netReady,
+    cannotCreate: !!draftErr || !netReady,
+    cannotCreateText: !netReady ? 'مستني الاتصال بالسيرفر…' : draftErr === 'short' ? (S.addMode === 'member' ? 'اكتب الاسم عشان تكمل' : 'اكتب اسمك عشان تكمل') : 'صحّح الاسم الأول',
+    draftErr: draftErr && draftErr !== 'short' ? draftErr : '',
+    signupRoleNote: S.addMode === 'member' ? 'هيدخل كعضو. تقدر تخليه مسؤول من صفحة العيلة.'
+      : rosterN === 0 ? 'إنت أول مستخدم، فهتبقى مسؤول المضخة.' : 'الأسماء الجديدة بتدخل كأعضاء. المسؤول يقدر يخليهم مسؤولين بعدين.',
+
+    // tabs
+    isHome: app && S.tab === 'home', isHistory: app && S.tab === 'history',
+    isFamily: app && S.tab === 'family', isSettings: app && S.tab === 'settings',
+    showTabs: app,
+
+    // home: freshness
+    hello: 'أهلاً ' + (S.name || '') + ' · ' + (adm ? 'مسؤول' : 'عضو'),
+    isLive: f === 'live', isStale: f === 'stale', isOffline: f === 'offline', isNoBroker: f === 'nobroker', isChecking: f === 'checking',
+    liveText: 'متصلة · ' + (heard < 3 ? 'لسه سامعينها' : 'آخر إشارة من ' + ago(heard)),
+    noBrokerPill: S.net === 'auth' ? 'بيانات الدخول غلط' : 'مش متصل بالسيرفر',
+    noBrokerText: S.net === 'auth'
+      ? 'السيرفر رفض اسم المستخدم أو كلمة السر المحفوظين على الموبايل ده. افتح الإعدادات وصحّحهم.'
+      : S.net === 'nolib' ? 'مكتبة MQTT ما اتحمّلتش (محتاجة نت أول مرة). اتأكد إن النت شغال واقفل التطبيق وافتحه تاني.'
+      : 'مش هنقدر نبعت أوامر أو نعرف الحالة الحقيقية لحد ما الاتصال يرجع. التطبيق بيحاول يتصل تاني لوحده.',
+    checkIdle: !S.check, checkBusy: S.check === 'checking', checkOk: S.check === 'ok', checkNone: S.check === 'none',
+
+    // home: cards
+    showFault: !!S.fault,
+    faultText: S.fault && S.fault.want === 'OFF'
+      ? 'التطبيق طلب فصل الموتور، بس وحدة التحكم لسه بتقول إنه جاهز. دي مشكلة في الهاردوير ومحتاجة حد يبص عليها عند المضخة.'
+      : 'التطبيق طلب توصيل الموتور، بس وحدة التحكم لسه بتقول إنه مفصول. دي مشكلة في الهاردوير ومحتاجة حد يبص عليها عند المضخة.',
+    faultFoot: S.fault && S.fault.want === 'OFF' ? 'هيفضل ظاهر لحد ما وحدة التحكم تقول إن الموتور اتفصل' : 'هيفضل ظاهر لحد ما وحدة التحكم تقول إن الموتور جاهز',
+    showManual: !!S.manual && !busy,
+    manualText: S.manual ? 'الموتور بقى ' + (S.manual.power === 'ON' ? 'جاهز' : 'مفصول') + ' من غير أمر من التطبيق — غالباً وحدة التحكم عملت ريستارت، أو حد غيّرها بإيده.' : '',
+    showError: !!S.error,
+    errorTitle: S.error && S.error.kind === 'restart' ? 'إعادة التشغيل ماتنفّذتش' : S.error && !S.error.kind ? 'إعادة التشغيل ماتأكدتش' : 'الأمر ماتنفّذش',
+    errorText: S.error ? S.error.text : '',
+    canRetry: !!(S.error && S.error.kind),
+
+    // home: dial
+    isRestarting: !!r,
+    restartLabel: !r ? '' : waiting ? 'مستنيين تأكيد وحدة التحكم…'
+      : (r.by ? r.by + ' · ' + left + ' ث' : r.ignored ? 'فيه واحدة جارية أصلاً · ' + left + ' ث' : 'جارية · ' + left + ' ث أو أقل'),
+    isTurningOn: !!p && p.kind === 'on', isTurningOff: !!p && p.kind === 'off',
+    isOnState: !busy && S.power === 'ON', isOffState: !busy && S.power === 'OFF', isUnknownState: !busy && !known,
+    onSub: lockedSub || 'بيشتغل تلقائي',
+    offSub: lockedSub || (S.fault ? 'مفصول · عطل' : 'مش هيشتغل لحد ما يتوصّل'),
+    unknownSub: f === 'offline' || f === 'nobroker' ? lockedSub : 'لسه مفيش قراءة',
+    dialOpacity: f === 'offline' || f === 'nobroker' ? '0.36' : f === 'stale' ? '0.5' : '1',
+    dialCursor: lk ? (busy ? 'default' : 'not-allowed') : 'pointer',
+    dialAria: busy ? 'جاري التنفيذ' : S.power === 'ON' ? 'الموتور جاهز — دوس لفصله' : S.power === 'OFF' ? 'الموتور مفصول — دوس لتوصيله' : 'الحالة مش معروفة',
+    restartEnabled: !lk && S.power === 'ON',
+    restartDisabled: lk || S.power !== 'ON',
+    restartHint: r ? (waiting ? 'مستنيين التأكيد…' : 'إعادة تشغيل جارية · ' + left + ' ث')
+      : f === 'offline' ? 'مقفول · وحدة التحكم أوفلاين'
+      : f === 'nobroker' ? 'مقفول · مش متصل بالسيرفر'
+      : p ? 'إعادة تشغيل' : 'إعادة التشغيل محتاجة الموتور جاهز',
+
+    // home: info card
+    isPendingRow: busy,
+    powerPendingText: r ? (waiting ? 'بيتأكد…' : 'إعادة تشغيل · ' + left + ' ث') : 'بيتبعت…',
+    lastLabel: busy ? 'مستني…' : S.lastCmd ? rel(t - S.lastCmd.at) + ' · ' + S.lastCmd.who : 'مفيش أوامر من ساعة ما فتحت',
+
+    // history
+    noHistory: S.cmds.length === 0, hasHistory: S.cmds.length > 0,
+    showLog: S.showLog && app,
+    logCount: S.dbg.length + (S.logLang === 'en' ? ' lines' : ' سطر'),
+    copyText: S.copied ? (S.logLang === 'en' ? 'Copied ✓' : 'اتنسخ ✓') : (S.logLang === 'en' ? 'Copy' : 'نسخ'),
+    clearText: S.logLang === 'en' ? 'Clear' : 'مسح',
+
+    // family
+    canAddMember: adm && S.net === 'up', cannotAddMember: !(adm && S.net === 'up'),
+    inviteHint: adm ? 'إنت مسؤول: تقدر تضيف أو تشيل أفراد وتخلي حد مسؤول.' : 'الأعضاء بيتحكموا في الموتور. المسؤول بس (' + adminNames().join(' أو ') + ') هو اللي بيضيف أو يشيل حد.',
+
+    // settings
+    connDirty,
+    clearConnText: S.armed === 'conn' ? 'اضغط تاني للتأكيد — هتحتاج تكتبها من الأول' : 'امسح بيانات الاتصال من الموبايل ده',
+    signOutText: 'امسح اسمي من الموبايل ده',
+    versionLine: 'PumpLink ' + CFG.VERSION + ' · firmware ' + (st.fw ? st.fw + (st.build ? ' (' + st.build + ')' : '') : '—'),
+
+    // overlays
+    showConfirm: S.confirm && app && S.tab === 'home',
+    showToast: !!S.toast && app,
+    toastTitle: S.toast ? S.toast.title : '',
+    toastInitials: S.toast ? initial(S.toast.name) : ''
+  };
+}
+
+/* ---------- list renderers ---------- */
+const TAB_ICONS = {
+  home: '<path d="M4 10.5 12 4l8 6.5V20H4z"/>',
+  history: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4.4l3 1.8"/>',
+  family: '<circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.6-3.1 2.8-4.8 5.5-4.8s4.9 1.7 5.5 4.8"/><path d="M16 6.6a3.2 3.2 0 0 1 0 5.6"/><path d="M17.6 14.6c1.7.6 2.7 2.1 3 4.4"/>'
+};
+const LOG_SRC = { fw: ['جهاز', 'FW'], rx: ['وارد', 'RX'], tx: ['صادر', 'TX'], app: ['تطبيق', 'APP'] };
+function fmtDate(t) { const d = new Date(t); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + clock(t); }
+function logText() {
+  const en = S.logLang === 'en', st = S.status || {};
+  const head = 'PumpLink ' + CFG.VERSION + ' · ' + CLIENT_ID + ' · fw ' + (st.fw || '?') + ' · ' + fmtDate(now()) + ' · ' + fresh();
+  return head + '\n' + S.dbg.map(e => clock(e.at) + '  ' + LOG_SRC[e.src][en ? 1 : 0] + '  ' + (en ? e.en : e.ar).replace(/[\u2066-\u2069]/g, '')).join('\n') + '\n';
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+  document.body.appendChild(ta); ta.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+  ta.remove(); return ok;
+}
+const LISTS = {
+  tabs() {
+    return [['home', 'الرئيسية'], ['history', 'السجل'], ['family', 'العيلة']].map(([k, label]) => {
+      const on = S.tab === k || (k === 'home' && S.tab === 'settings');
+      return '<button class="tab" data-click="tab" data-arg="' + k + '" style="color:' + (on ? '#c8ea45' : 'rgba(255,255,255,.38)') + '"' + (on ? ' aria-current="page"' : '') + '>' +
+        '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' + TAB_ICONS[k] + '</svg>' +
+        '<span>' + label + '</span></button>';
+    }).join('');
+  },
+  profiles() {
+    return Object.keys(S.roster).map(n => {
+      const adm = isAdminName(n);
+      return '<button class="glass pick" data-click="pick" data-arg="' + esc(n) + '" style="display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:20px;width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09)">' +
+        '<div class="avatar" style="width:38px;height:38px;font:500 15px var(--f)">' + esc(initial(n)) + '</div>' +
+        '<div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px"><span style="font:500 14.5px var(--f);color:#fff">' + esc(n) + '</span>' +
+        (adm ? '<span class="chip lime">مسؤول</span>' : '') + '</div>' +
+        '<div style="font:500 12px var(--fn);color:rgba(255,255,255,.4);margin-top:3px">' + (adm ? 'مسؤول · بيدير العيلة' : 'عضو') + '</div></div>' +
+        '<span style="font:600 13px var(--f);color:rgba(255,255,255,.35)">←</span></button>';
+    }).join('');
+  },
+  members() {
+    const adm = isAdmin();
+    const names = Object.keys(S.roster);
+    if (!names.length) return '<div style="padding:18px 0;font:400 13px var(--f);color:rgba(255,255,255,.45)">لسه مفيش حد في القائمة.</div>';
+    return names.map(n => {
+      const isA = isAdminName(n), you = n === S.name;
+      const armed = S.armed === 'rm:' + n;
+      return '<div style="display:flex;align-items:center;gap:13px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.05)">' +
+        '<div class="avatar" style="width:40px;height:40px;border-color:rgba(255,255,255,.1);font:500 14px var(--f);color:rgba(255,255,255,.8)">' + esc(initial(n)) + '</div>' +
+        '<div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
+        '<span style="font:400 14px var(--f);color:rgba(255,255,255,.92)">' + esc(n) + '</span>' +
+        (you ? '<span class="chip lime" style="border-color:rgba(200,234,69,.25)">إنت</span>' : '') +
+        (isA ? '<span class="chip grey">مسؤول</span>' : '') + '</div>' +
+        '<div style="font:400 12.5px var(--f);color:rgba(255,255,255,.4);margin-top:3px">' + (isA ? 'مسؤول' : 'عضو') + (you ? ' · الموبايل ده' : '') + '</div></div>' +
+        '<div style="flex:none;display:flex;gap:7px">' +
+        (adm && !isA && S.net === 'up' ? '<button class="mini lime" data-click="promote" data-arg="' + esc(n) + '">خليه مسؤول</button>' : '') +
+        (adm && !you && S.net === 'up' ? '<button class="mini rm' + (armed ? ' arm' : '') + '" data-click="remove" data-arg="' + esc(n) + '">' + (armed ? 'متأكد؟' : 'شيل') + '</button>' : '') +
+        '</div></div>';
+    }).join('');
+  },
+  history() {
+    const secs = CFG.RESTART_MS / 1000;
+    const T = {
+      on: { title: 'توصيل الموتور', icon: 'img/on.png', tag: 'أمر', tc: '#c8ea45' },
+      off: { title: 'فصل الموتور', icon: 'img/off.png', tag: 'أمر', tc: '#c8ea45' },
+      restart: { title: 'إعادة تشغيل · فصل ' + secs + ' ث', icon: 'img/restart.png', tag: 'إعادة تشغيل', tc: '#e2874f' }
+    };
+    const RES = {
+      pending: ['جاري…', '#c8ea45'], ok: ['اتنفّذ', '#7ec9a2'], fault: ['عطل', '#ef8f7a'],
+      ignored: ['اتجاهل', '#e2b04f'], unconfirmed: ['ماتأكدش', '#e2b04f'], unknown: ['—', 'rgba(255,255,255,.35)']
+    };
+    return S.cmds.map(e => {
+      const M = T[e.kind]; if (!M) return '';
+      const r = RES[e.result] || RES.unknown;
+      const who = e.who === 'unknown' ? 'من غير اسم' : e.who;
+      return '<div class="hist"><div style="width:30px;height:30px;flex:none;display:flex;align-items:center;justify-content:center"><img src="' + M.icon + '" alt="" style="width:30px;height:30px;object-fit:contain"></div>' +
+        '<div style="flex:1;min-width:0"><div style="font:400 14px/1.5 var(--f);color:rgba(255,255,255,.9)">' + esc(M.title) + '</div>' +
+        '<div style="display:flex;align-items:center;gap:7px;margin-top:4px">' +
+        '<span style="font:700 10.5px var(--fn);color:' + M.tc + '">' + esc(M.tag) + '</span>' +
+        '<span class="avatar" style="width:18px;height:18px;background:rgba(255,255,255,.08);border:0;font:500 9px var(--f);color:rgba(255,255,255,.7)">' + esc(initial(who)) + '</span>' +
+        '<span style="font:400 12px var(--f);color:rgba(255,255,255,.45);min-width:0">' + esc(who) + '</span></div></div>' +
+        '<div style="flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:5px">' +
+        '<span class="ltr" style="font:600 11px var(--fn);letter-spacing:.04em;color:rgba(255,255,255,.35)">' + clock(e.at) + '</span>' +
+        '<span style="font:600 11px var(--fn);color:' + r[1] + (e.result === 'pending' ? ';animation:pl-breathe 1.5s ease-in-out infinite' : '') + '">' + r[0] + '</span></div></div>';
+    }).join('');
+  },
+  logseg() {
+    return [['ar', 'عربي'], ['en', 'English']].map(([k, l]) =>
+      '<button class="segb' + (S.logLang === k ? ' on' : '') + '" data-click="logLang" data-arg="' + k + '">' + l + '</button>').join('');
+  },
+  logview() {
+    if (!S.showLog) return '';
+    const en = S.logLang === 'en';
+    if (!S.dbg.length) return '<div class="lg"><span class="lm" style="color:rgba(255,255,255,.4)">' + (en ? 'Nothing logged yet.' : 'لسه مفيش حاجة.') + '</span></div>';
+    return S.dbg.map(e => '<div class="lg ' + e.src + (e.tone ? ' ' + e.tone : '') + '"' + (en ? '' : ' dir="auto"') + '>' +
+      '<span class="lt">' + clock(e.at) + '</span><span class="ls">' + LOG_SRC[e.src][en ? 1 : 0] + '</span>' +
+      '<span class="lm">' + esc(en ? e.en : e.ar) + '</span></div>').join('');
+  },
+  controller() {
+    const o = S.status;
+    const row = (k, v, ltr) => '<div class="row"><span class="k">' + k + '</span><span class="v num"' + (ltr ? ' dir="ltr"' : '') + '>' + esc(v) + '</span></div>';
+    if (!o) return row('آخر رد', 'لسه مفيش رد');
+    const since = (now() - S.statusAt) / 1000;
+    const rssi = Number(o.rssi);
+    return [
+      row('الشبكة', o.ssid || '—', true),
+      '<div class="row"><span class="k">الإشارة</span><span class="v num">' + (isFinite(rssi) ? '<span dir="ltr">' + rssi + ' dBm</span> · ' + rssiVerdict(rssi) : '—') + '</span></div>',
+      row('IP', o.ip || '—', true),
+      row('مدة التشغيل', isFinite(Number(o.uptime_s)) ? uptime(Number(o.uptime_s) + since) : '—'),
+      row('المعالج', o.cpu_mhz ? o.cpu_mhz + ' MHz' : '—', true),
+      row('البرنامج', o.fw ? 'fw ' + o.fw + (o.build ? ' · ' + o.build : '') : '—', true),
+      row('آخر رد', rel(now() - S.statusAt))
+    ].join('');
+  }
+};
+
+/* =====================================================================
+   Render — a tiny binder over the static markup
+   ===================================================================== */
+const $$ = sel => Array.prototype.slice.call(document.querySelectorAll(sel));
+let IF_EL, T_EL, CSS_EL, LIST_EL, BIND_EL, ARIA_EL;
+function getPath(path) { return path.split('.').reduce((o, k) => (o == null ? o : o[k]), S); }
+function setPath(path, v) { const ks = path.split('.'); const last = ks.pop(); ks.reduce((o, k) => o[k], S)[last] = v; }
+
+function render() {
+  const V = view();
+  IF_EL.forEach(el => { const on = !!V[el.dataset.if]; if (el.hidden === on) el.hidden = !on; });
+  T_EL.forEach(el => { const v = V[el.dataset.t]; const s = v == null ? '' : String(v); if (el.textContent !== s) el.textContent = s; });
+  CSS_EL.forEach(el => el.dataset.css.split(';').forEach(pair => {
+    const i = pair.indexOf(':'); const prop = pair.slice(0, i).trim(), key = pair.slice(i + 1).trim();
+    if (el.style.getPropertyValue(prop) !== V[key]) el.style.setProperty(prop, V[key]);
+  }));
+  ARIA_EL.forEach(el => el.setAttribute('aria-label', V[el.dataset.aria] || ''));
+  LIST_EL.forEach(el => {
+    const html = LISTS[el.dataset.list](V);
+    if (el._html === html) return;
+    const stick = el.id === 'logbody' && (S.logJump || el.scrollHeight - el.scrollTop - el.clientHeight < 40);
+    el._html = html; el.innerHTML = html;
+    if (stick) { el.scrollTop = el.scrollHeight; S.logJump = false; }
+  });
+  const lb = document.getElementById('logbody'); if (lb) lb.dir = S.logLang === 'en' ? 'ltr' : 'rtl';
+  BIND_EL.forEach(el => { if (document.activeElement !== el) { const v = getPath(el.dataset.bind) || ''; if (el.value !== v) el.value = v; } });
+  document.title = S.stage === 'app' && S.power ? 'PumpLink · ' + (S.power === 'ON' ? 'جاهز' : 'مفصول') : 'PumpLink';
+}
+
+/* =====================================================================
+   Actions
+   ===================================================================== */
+function arm(key) { S.armed = key; later('arm', 4000, () => { S.armed = null; }); }
+const ACTIONS = {
+  noop() {},
+  openLog() { S.showLog = true; S.logJump = true; },
+  closeLog() { S.showLog = false; },
+  logLang(l) { S.logLang = l === 'en' ? 'en' : 'ar'; store.set('pumplink.logLang', S.logLang); S.logJump = true; },
+  clearLog() { S.dbg = []; },
+  copyLog() {
+    const text = logText();
+    const done = () => { S.copied = true; later('copied', 2000, () => { S.copied = false; }); render(); };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, () => { if (fallbackCopy(text)) done(); });
+    else if (fallbackCopy(text)) done();
+  },
+  tab(a) { S.tab = a; S.confirm = false; document.getElementById('main').scrollTop = 0; },
+  openSettings() { S.tab = 'settings'; S.edit = Object.assign({}, S.conn); document.getElementById('main').scrollTop = 0; },
+  closeSettings() { S.tab = 'home'; },
+  dismissToast() { S.toast = null; clearT('toast'); },
+  dismissManual() { S.manual = null; },
+  dismissError() { S.error = null; },
+  check() { if (S.net === 'up') sendStatus(); },
+  toggle() { if (!locked()) sendPower(S.power === 'ON' ? 'off' : 'on'); },
+  askRestart() { if (!locked() && S.power === 'ON') S.confirm = true; },
+  cancelRestart() { S.confirm = false; },
+  confirmRestart() { S.confirm = false; sendRestart(); },
+  retry() {
+    const e = S.error; if (!e || !e.kind) return;
+    S.error = null;
+    if (e.kind === 'restart') { if (!locked() && S.power === 'ON') S.confirm = true; }
+    else sendPower(e.kind);
+  },
+  pick(n) { if (Object.prototype.hasOwnProperty.call(S.roster, n)) signInAs(n); },
+  goSignUp() { S.stage = 'signup'; S.addMode = 'self'; S.draft = ''; focusSoon('in-name'); },
+  addMember() { if (isAdmin()) { S.stage = 'signup'; S.addMode = 'member'; S.draft = ''; focusSoon('in-name'); } },
+  backFromSignUp() { if (S.addMode === 'member') { S.stage = 'app'; S.tab = 'family'; } else S.stage = 'signin'; S.draft = ''; },
+  promote(n) { if (!isAdmin() || !S.roster[n]) return; const next = Object.assign({}, S.roster); next[n] = 'admin'; writeRoster(next); },
+  remove(n) {
+    if (!isAdmin() || n === S.name || !S.roster[n]) return;
+    if (S.armed !== 'rm:' + n) { arm('rm:' + n); return; }
+    S.armed = null; const next = Object.assign({}, S.roster); delete next[n]; writeRoster(next);
+  },
+  saveConn() {
+    const c = { host: S.edit.host.trim(), user: S.edit.user.trim(), pass: S.edit.pass };
+    if (!c.host || !c.user || !c.pass) return;
+    S.conn = c; S.edit = Object.assign({}, c); store.set(LS.conn, c);
+    connect(c, false);
+  },
+  clearConn() {
+    if (S.armed !== 'conn') { arm('conn'); return; }
+    S.armed = null; disconnect(); store.del(LS.conn);
+    Object.keys(timers).forEach(clearT);
+    S.conn = null; resetRuntime();
+    S.setup = { host: '', user: '', pass: '' }; S.setupErr = '';
+    S.stage = 'setup'; S.tab = 'home';
+  },
+  fixConn() {
+    S.setup = { host: S.conn ? S.conn.host : '', user: S.conn ? S.conn.user : '', pass: '' };
+    disconnect(); S.setupErr = ''; S.stage = 'setup';
+  },
+  signOut() { store.del(LS.name); S.name = null; S.stage = 'signin'; S.tab = 'home'; S.cmds = []; S.openCmds = []; S.confirm = false; S.showLog = false; }
+};
+function focusSoon(id) { setTimeout(() => { const el = document.getElementById(id); if (el) el.focus(); }, 60); }
+
+function submitSetup() {
+  const c = { host: S.setup.host.trim(), user: S.setup.user.trim(), pass: S.setup.pass };
+  if (!c.host || !c.user || !c.pass || S.setupBusy) return;
+  S.setupBusy = true; S.setupErr = '';
+  connect(c, true);
+  later('trial', 15000, () => {
+    if (!S.setupBusy) return;
+    S.setupBusy = false;
+    S.setupErr = 'السيرفر مردّش خلال 15 ثانية. اتأكد من العنوان ومن النت.';
+    disconnect();
+  });
+}
+
+/* =====================================================================
+   Boot
+   ===================================================================== */
+function boot() {
+  IF_EL = $$('[data-if]'); T_EL = $$('[data-t]'); CSS_EL = $$('[data-css]');
+  LIST_EL = $$('[data-list]'); BIND_EL = $$('[data-bind]'); ARIA_EL = $$('[data-aria]');
+
+  document.addEventListener('click', ev => {
+    const el = ev.target.closest('[data-click]');
+    if (!el) return;
+    const fn = ACTIONS[el.dataset.click];
+    if (!fn) return;
+    ev.preventDefault();
+    fn(el.dataset.arg);
+    render();
+  });
+  document.addEventListener('input', ev => {
+    const el = ev.target;
+    if (el.dataset && el.dataset.bind) { setPath(el.dataset.bind, el.value); render(); }
+  });
+  document.getElementById('setupForm').addEventListener('submit', ev => { ev.preventDefault(); submitSetup(); render(); });
+  document.getElementById('signupForm').addEventListener('submit', ev => { ev.preventDefault(); createProfile(); render(); });
+  document.getElementById('connForm').addEventListener('submit', ev => { ev.preventDefault(); if (view().connDirty) ACTIONS.saveConn(); render(); });
+  const dial = document.getElementById('dial');
+  dial.tabIndex = 0;
+  dial.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); ACTIONS.toggle(); render(); } });
+
+  // Coming back to the app is "opening" it: re-check the controller.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    if (S.net === 'up') sendStatus();
+    else if (client && S.net !== 'auth') { try { client.reconnect(); } catch (e) {} }
+    render();
+  });
+  window.addEventListener('online', () => { if (client && S.net !== 'up' && S.net !== 'auth') { try { client.reconnect(); } catch (e) {} } });
+
+  setInterval(() => {
+    if (S.stage === 'app') {
+      const f = fresh();
+      if (S.prevFresh && f !== S.prevFresh) {
+        if (f === 'stale') appLog('مفيش إشارة من أكتر من 150 ث · الحالة ممكن تكون قديمة', 'No proof of life for 150 s -> stale', 'warn');
+        else if (f === 'offline') appLog('وحدة التحكم أوفلاين', 'Controller offline (avail offline, STATUS unanswered)', 'bad');
+        else if (f === 'live' && (S.prevFresh === 'stale' || S.prevFresh === 'offline')) appLog('الإشارة رجعت', 'Proof of life resumed -> live', 'ok');
+      }
+      S.prevFresh = f;
+      const t = now();
+      S.openCmds = S.openCmds.filter(x => {
+        if (x.result === 'pending' && t - x.at > (x.kind === 'restart' ? 15000 : 8000)) { x.result = 'unconfirmed'; return false; }
+        return x.result === 'pending';
+      });
+    }
+    render();
+  }, 500);
+
+  if (S.conn) connect(S.conn, false);
+  render();
+
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+  }
+}
+
+// Test hook: read-only snapshot for automated checks. Exposes no credentials.
+window.__pumplink = { state: () => JSON.parse(JSON.stringify(Object.assign({}, S, { conn: S.conn ? { host: S.conn.host } : null, setup: null, edit: null }))), fresh, clientId: CLIENT_ID };
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+
+</script>
+</body>
+</html>
