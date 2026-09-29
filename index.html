@@ -30,7 +30,8 @@
   --f:'Archivo','Readex Pro',system-ui,sans-serif;
   --fn:'Archivo Narrow','Readex Pro',system-ui,sans-serif;
   --lime:#c8ea45; --lime-soft:#e4f2a8; --green:#7ec9a2; --amber:#e2b04f; --amber-text:#ecc77f;
-  --red:#ef8f7a; --orange:#e2874f; --bg:#120d16; --phone:#181120;
+  --red:#ef8f7a; --orange:#e2874f;
+  --water:#54d2f0; --water-soft:#c4f1fb;   /* the motor's "ready" colour: light water blue */ --bg:#120d16; --phone:#181120;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
@@ -141,6 +142,11 @@ main{flex:1;overflow-y:auto;padding:0 20px 18px;-webkit-overflow-scrolling:touch
 .big{position:relative;height:40px;margin-top:10px;display:flex;align-items:center;justify-content:center;font:600 30px/1 var(--fn)}
 .sub{position:relative;min-height:17px;max-width:168px;margin-top:8px;display:flex;align-items:center;justify-content:center;text-align:center;font:400 12.5px/1.45 var(--f)}
 .sweep{position:absolute;inset:-1px;border-radius:50%;-webkit-mask:radial-gradient(circle,transparent 105px,#000 105px,#000 108px,transparent 108px);mask:radial-gradient(circle,transparent 105px,#000 105px,#000 108px,transparent 108px)}
+.vessel{position:relative;width:96px;height:96px}
+.vessel img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.vessel .glowwrap,.vessel .liquid{position:absolute;inset:0}
+.vessel .sphere{position:absolute;inset:0;clip-path:circle(49.2% at 49.5% 48%)}
+.vessel svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .act{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 0;border-radius:18px;font:500 13px var(--f)}
 .act.on{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.85)}
 .act.on:hover{background:rgba(255,255,255,.09);color:#fff}
@@ -200,7 +206,7 @@ main{flex:1;overflow-y:auto;padding:0 20px 18px;-webkit-overflow-scrolling:touch
     <!-- ========== FIRST RUN: CONNECTION ========== -->
     <section class="screen" data-if="isSetup" hidden>
       <form id="setupForm" autocomplete="on" style="padding:54px 6px 0;display:flex;flex-direction:column;min-height:calc(100dvh - 60px)">
-        <img src="img/on.png" alt="" style="width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 0 26px rgba(200,234,69,.35))">
+        <img src="img/on-water.png" alt="" style="width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 0 26px rgba(84,210,240,.35))">
         <div class="eyebrow lime" style="margin-top:30px"><span class="ltr" style="letter-spacing:.24em">DAMASY PUMPLINK</span> · إعداد أول مرة</div>
         <div class="h1" style="margin-top:10px">وصّل التطبيق<br>بالسيرفر</div>
         <div class="p" style="margin-top:12px;max-width:300px">بيانات HiveMQ Cloud بتاعة البيت. بتتحفظ على الموبايل ده بس، ومش مكتوبة في ملفات التطبيق.</div>
@@ -228,7 +234,7 @@ main{flex:1;overflow-y:auto;padding:0 20px 18px;-webkit-overflow-scrolling:touch
     <!-- ========== SIGN IN (name picker) ========== -->
     <section class="screen" data-if="isSignIn" hidden>
       <div style="padding:60px 6px 0;display:flex;flex-direction:column;min-height:calc(100dvh - 60px)">
-        <img src="img/on.png" alt="" style="width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 0 26px rgba(200,234,69,.35))">
+        <img src="img/on-water.png" alt="" style="width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 0 26px rgba(84,210,240,.35))">
         <div class="eyebrow lime" style="margin-top:30px"><span class="ltr" style="letter-spacing:.24em">DAMASY PUMPLINK</span> · <span data-t="pumpName"></span></div>
         <div class="h1" style="font-size:36px;margin-top:10px">مين بيستخدم<br>المضخة؟</div>
         <div class="p" style="margin-top:14px;max-width:290px">اختار اسمك عشان أهل البيت يعرفوا مين فصل الموتور أو وصّله.</div>
@@ -336,44 +342,33 @@ main{flex:1;overflow-y:auto;padding:0 20px 18px;-webkit-overflow-scrolling:touch
         <div style="display:flex;justify-content:center">
           <div class="dial" id="dial" role="button" data-click="toggle" data-css="opacity:dialOpacity;cursor:dialCursor" data-aria="dialAria">
 
-            <div class="layer" data-if="isRestarting" hidden>
-              <div class="abs" style="inset:0;border:1px solid rgba(226,135,79,.45);box-shadow:0 0 60px rgba(226,135,79,.24);animation:pl-pulse 1.6s ease-in-out infinite"></div>
-              <div class="ico">
-                <div style="width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#f0a24f,#d9701f 78%);box-shadow:0 0 34px rgba(226,135,79,.4),inset 0 1px 0 rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center">
-                  <svg width="58" height="58" viewBox="0 0 48 48" fill="none" style="animation:pl-spin 2.2s linear infinite"><path d="M24 7.5a16.5 16.5 0 1 1-14.9 9.4" stroke="#fff" stroke-width="4.6" stroke-linecap="round"/><path d="M12.5 9.4 13.9 19.2 4.4 14.6Z" fill="#fff"/></svg>
-                </div>
-              </div>
-              <div class="big" style="font:600 14px var(--fn);color:var(--orange)">إعادة تشغيل…</div>
-              <div class="sub" style="color:rgba(255,255,255,.5)" data-t="restartLabel"></div>
-            </div>
-
-            <div class="layer" data-if="isTurningOn" hidden>
-              <div class="abs" style="inset:0;border:1px solid rgba(200,234,69,.18)"></div>
-              <div class="sweep" style="background:conic-gradient(from 0deg,rgba(200,234,69,0) 0deg,rgba(200,234,69,0) 250deg,rgba(200,234,69,.85) 358deg,rgba(200,234,69,0) 360deg);animation:pl-sweep 1.15s linear infinite"></div>
-              <div class="abs" style="inset:10px;background:radial-gradient(circle at 50% 30%,rgba(200,234,69,.16),rgba(200,234,69,0) 70%);animation:pl-settle 1.5s ease-in-out infinite"></div>
-              <div class="ico"><img src="img/off.png" alt="" style="animation:pl-emerge 1.5s ease-in-out infinite"></div>
-              <div class="big" style="color:rgba(255,255,255,.3);animation:pl-settle 1.5s ease-in-out infinite">مفصول</div>
-              <div class="sub" style="font:600 12px var(--fn);color:var(--lime)">بيوصّل الموتور…</div>
+            <!-- Water fill: RESTART (6 s) and ON (~1 s). Drawn by the fill engine (fillFrame). -->
+            <div class="layer" data-if="isFilling" hidden>
+              <div class="abs" id="fring" style="inset:0;border:1px solid rgba(255,255,255,.13)"></div>
+              <div class="abs" id="finner" style="inset:10px"></div>
+              <div class="ico"><div class="vessel" id="vessel"></div></div>
+              <div class="big" data-t="fillBig" data-css="font-size:fillBigSize;color:fillBigColor;animation:fillBigAnim"></div>
+              <div class="sub" data-t="fillSub" data-css="color:fillSubColor"></div>
             </div>
 
             <div class="layer" data-if="isTurningOff" hidden>
               <div class="abs" style="inset:0;border:1px solid rgba(255,255,255,.1)"></div>
               <div class="sweep" style="background:conic-gradient(from 0deg,rgba(255,255,255,0) 0deg,rgba(255,255,255,0) 250deg,rgba(255,255,255,.5) 358deg,rgba(255,255,255,0) 360deg);animation:pl-sweep 1.15s linear reverse infinite"></div>
               <div class="abs" style="inset:10px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.05),rgba(255,255,255,0) 70%);animation:pl-settle 1.5s ease-in-out infinite"></div>
-              <div class="ico"><img src="img/on.png" alt="" style="filter:drop-shadow(0 0 18px rgba(200,234,69,.35));animation:pl-emerge 1.5s ease-in-out infinite"></div>
-              <div class="big" style="color:rgba(244,248,230,.34);animation:pl-settle 1.5s ease-in-out infinite">جاهز</div>
+              <div class="ico"><img src="img/on-water.png" alt="" style="filter:drop-shadow(0 0 18px rgba(84,210,240,.35));animation:pl-emerge 1.5s ease-in-out infinite"></div>
+              <div class="big" style="color:rgba(239,252,255,.34);animation:pl-settle 1.5s ease-in-out infinite">جاهز</div>
               <div class="sub" style="font:600 12px var(--fn);color:rgba(255,255,255,.55)">بيفصل الموتور…</div>
             </div>
 
-            <div class="layer" data-if="isOnState" hidden>
-              <div class="abs" style="inset:0;border:1px solid rgba(200,234,69,.55);box-shadow:0 0 70px rgba(200,234,69,.3),inset 0 0 40px rgba(200,234,69,.1)"></div>
-              <div class="abs" style="inset:10px;background:radial-gradient(circle at 50% 30%,rgba(200,234,69,.2),rgba(200,234,69,.02) 72%)"></div>
-              <div class="ico"><img src="img/on.png" alt="" style="filter:drop-shadow(0 0 22px rgba(200,234,69,.45))"></div>
-              <div class="big" style="color:#f4f8e6">جاهز</div>
-              <div class="sub" style="color:rgba(244,248,230,.62)" data-t="onSub"></div>
+            <div class="layer" data-if="dialOn" hidden data-css="animation:onLayerAnim">
+              <div class="abs" style="inset:0;border:1px solid rgba(84,210,240,.55);box-shadow:0 0 70px rgba(84,210,240,.3),inset 0 0 40px rgba(84,210,240,.1)"></div>
+              <div class="abs" style="inset:10px;background:radial-gradient(circle at 50% 30%,rgba(84,210,240,.2),rgba(84,210,240,.02) 72%)"></div>
+              <div class="ico"><img src="img/on-water.png" alt="" style="filter:drop-shadow(0 0 16px rgba(84,210,240,.4))"></div>
+              <div class="big" style="color:#effcff">جاهز</div>
+              <div class="sub" style="color:rgba(230,248,255,.62)" data-t="onSub"></div>
             </div>
 
-            <div class="layer" data-if="isOffState" hidden>
+            <div class="layer" data-if="dialOff" hidden data-css="animation:offLayerAnim">
               <div class="abs" style="inset:0;border:1px solid rgba(255,255,255,.13);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)"></div>
               <div class="abs" style="inset:10px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.05),rgba(255,255,255,0) 72%)"></div>
               <div class="ico"><img src="img/off.png" alt="" style="opacity:.9"></div>
@@ -381,7 +376,7 @@ main{flex:1;overflow-y:auto;padding:0 20px 18px;-webkit-overflow-scrolling:touch
               <div class="sub" style="color:rgba(255,255,255,.4)" data-t="offSub"></div>
             </div>
 
-            <div class="layer" data-if="isUnknownState" hidden>
+            <div class="layer" data-if="dialUnknown" hidden>
               <div class="abs" style="inset:0;border:1px dashed rgba(255,255,255,.14)"></div>
               <div class="ico"><img src="img/off.png" alt="" style="opacity:.35;filter:grayscale(1)"></div>
               <div class="big" style="color:rgba(255,255,255,.35)">—</div>
@@ -402,8 +397,8 @@ main{flex:1;overflow-y:auto;padding:0 20px 18px;-webkit-overflow-scrolling:touch
       <div class="glass info">
         <div class="row">
           <span class="k">حالة الموتور</span>
-          <span class="v" data-if="isPendingRow" hidden style="font:600 12.5px var(--fn);color:var(--lime);animation:pl-breathe 1.5s ease-in-out infinite" data-t="powerPendingText"></span>
-          <span class="v" data-if="isOnState" hidden style="color:var(--lime)"><span class="dot" style="width:7px;height:7px;background:var(--lime);box-shadow:0 0 10px var(--lime)"></span>جاهز</span>
+          <span class="v" data-if="isPendingRow" hidden style="font:600 12.5px var(--fn);color:var(--water);animation:pl-breathe 1.5s ease-in-out infinite" data-t="powerPendingText"></span>
+          <span class="v" data-if="isOnState" hidden style="color:var(--water)"><span class="dot" style="width:7px;height:7px;background:var(--water);box-shadow:0 0 10px var(--water)"></span>جاهز</span>
           <span class="v" data-if="isOffState" hidden style="color:rgba(255,255,255,.75)"><span class="dot" style="width:7px;height:7px;background:rgba(255,255,255,.3)"></span>مفصول</span>
           <span class="v" data-if="isUnknownState" hidden style="color:rgba(255,255,255,.45)">مش معروف</span>
         </div>
@@ -553,7 +548,7 @@ const CFG = {
   UNPROMPTED_MS: 10000,   // a state change this long after any command did not come from an app
   NAME_MAX_BYTES: 23,     // firmware keeps the name in char lastUser[24]
   PUMP_NAME: 'موتور بيت الدماصي',
-  VERSION: '1.2'
+  VERSION: '1.3'
 };
 
 const LS = { conn: 'pumplink.conn', name: 'pumplink.name', device: 'pumplink.device' };
@@ -1175,6 +1170,22 @@ function view() {
       : (r.by ? r.by + ' · ' + left + ' ث' : r.ignored ? 'فيه واحدة جارية أصلاً · ' + left + ' ث' : 'جارية · ' + left + ' ث أو أقل'),
     isTurningOn: !!p && p.kind === 'on', isTurningOff: !!p && p.kind === 'off',
     isOnState: !busy && S.power === 'ON', isOffState: !busy && S.power === 'OFF', isUnknownState: !busy && !known,
+    // the dial also waits for the fill to finish its last stretch before showing the resting layer
+    isFilling: !!(FILL.mode || FILL.finishing),
+    dialOn: !busy && !FILL.finishing && S.power === 'ON',
+    dialOff: !busy && !FILL.finishing && S.power === 'OFF',
+    dialUnknown: !busy && !FILL.finishing && !known,
+    onLayerAnim: !FILL.reduced && t - FILL.doneAt < 600 ? 'none' : '',
+    offLayerAnim: !FILL.reduced && t - FILL.doneAt < 600 ? 'none' : '',
+    fillBig: r ? 'إعادة تشغيل…' : (p && p.kind === 'on') ? 'مفصول' : FILL.finishing ? (FILL.outcome === 'ok' ? 'جاهز' : 'مفصول') : '',
+    fillBigSize: r ? '15px' : '30px',
+    fillBigColor: r ? 'var(--water-soft)' : (p && p.kind === 'on') ? 'rgba(255,255,255,.3)' : FILL.outcome === 'ok' ? '#effcff' : 'rgba(255,255,255,.55)',
+    fillBigAnim: r && waiting ? 'pl-breathe 1.5s ease-in-out infinite' : 'none',
+    fillSub: r ? (waiting ? 'مستنيين تأكيد وحدة التحكم…'
+        : (r.by ? r.by + ' · ' + left + ' ث' : r.ignored ? 'فيه واحدة جارية أصلاً · ' + left + ' ث' : 'جارية · ' + left + ' ث أو أقل'))
+      : (p && p.kind === 'on') ? (t - p.at > 900 ? 'مستني تأكيد وحدة التحكم…' : 'بيوصّل الموتور…')
+      : FILL.finishing ? (FILL.outcome === 'ok' ? 'بيشتغل تلقائي' : S.fault ? 'مفصول · عطل' : 'ماتأكدش') : '',
+    fillSubColor: r ? 'rgba(255,255,255,.55)' : (p && p.kind === 'on') ? 'var(--water)' : FILL.outcome === 'ok' ? 'rgba(230,248,255,.62)' : '#f3b3a4',
     onSub: lockedSub || 'بيشتغل تلقائي',
     offSub: lockedSub || (S.fault ? 'مفصول · عطل' : 'مش هيشتغل لحد ما يتوصّل'),
     unknownSub: f === 'offline' || f === 'nobroker' ? lockedSub : 'لسه مفيش قراءة',
@@ -1281,7 +1292,7 @@ const LISTS = {
   history() {
     const secs = CFG.RESTART_MS / 1000;
     const T = {
-      on: { title: 'توصيل الموتور', icon: 'img/on.png', tag: 'أمر', tc: '#c8ea45' },
+      on: { title: 'توصيل الموتور', icon: 'img/on-water.png', tag: 'أمر', tc: '#c8ea45' },
       off: { title: 'فصل الموتور', icon: 'img/off.png', tag: 'أمر', tc: '#c8ea45' },
       restart: { title: 'إعادة تشغيل · فصل ' + secs + ' ث', icon: 'img/restart.png', tag: 'إعادة تشغيل', tc: '#e2874f' }
     };
@@ -1335,6 +1346,117 @@ const LISTS = {
 };
 
 /* =====================================================================
+   Water fill — RESTART (6 s) and ON (~1 s).
+   The level is derived from S.restart / S.pending timestamps, not from a
+   free-running timer, so it is right for another phone's restart and for an
+   app opened mid-cycle. It never claims more than the hardware confirmed:
+   it rises to 90 %, waits there for home/pump/state, then completes to
+   100 % (ready) or drains to 0 (fault / no confirmation).
+   ===================================================================== */
+const WATER_RGB = [84, 210, 240];
+const FILL_HOLD = 0.9, FILL_TOP = 0.5, FILL_BOTTOM = 96;                 // % of the icon box
+const FILL = { mode: null, level: 0, tween: null, finishing: false, outcome: null, doneAt: 0,
+  motion: 0, bubbles: [], raf: 0, last: 0, els: null, reduced: false };
+try {
+  const mq = matchMedia('(prefers-reduced-motion: reduce)');
+  FILL.reduced = mq.matches;
+  if (mq.addEventListener) mq.addEventListener('change', e => { FILL.reduced = e.matches; });
+} catch (e) {}
+
+function buildVessel(host) {
+  host.innerHTML =
+    '<img src="img/off.png" alt="">' +
+    '<div class="glowwrap"><div class="sphere"><div class="liquid"><img src="img/on-water.png" alt=""></div></div></div>' +
+    '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs>' +
+      '<clipPath id="fsph"><circle cx="49.5" cy="48" r="47.5"/></clipPath>' +
+      '<clipPath id="fliq"><polygon points=""/></clipPath></defs>' +
+      '<g clip-path="url(#fsph)"><g clip-path="url(#fliq)" class="fbub"></g>' +
+      '<path class="fsurf" d="" fill="none" stroke="rgba(170,240,255,.9)" stroke-width="1.3" stroke-linecap="round"/>' +
+      '<path class="fsheen" d="" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3.2" stroke-linecap="round" opacity=".5"/></g></svg>';
+  FILL.els = {
+    liquid: host.querySelector('.liquid'), glow: host.querySelector('.glowwrap'),
+    poly: host.querySelector('#fliq polygon'), surf: host.querySelector('.fsurf'), sheen: host.querySelector('.fsheen'),
+    bub: host.querySelector('.fbub'), ring: document.getElementById('fring'), inner: document.getElementById('finner')
+  };
+}
+function fillMode() { if (S.restart) return 'restart'; if (S.pending && S.pending.kind === 'on') return 'on'; return null; }
+function fillBase(mode, t) {
+  if (mode === 'restart') {
+    const r = S.restart;
+    return Math.max(0, Math.min(FILL_HOLD, FILL_HOLD * (t - r.startAt) / (r.endsAt - r.startAt)));
+  }
+  const k = Math.min(1, Math.max(0, (t - S.pending.at) / 850));
+  return FILL_HOLD * (1 - Math.pow(1 - k, 3));
+}
+// Called at the top of every render: notices a fill starting or ending, runs the frame loop only while needed.
+function fillSync() {
+  const mode = fillMode(), t = now();
+  if (mode && FILL.mode !== mode) { FILL.mode = mode; FILL.finishing = false; FILL.tween = null; FILL.bubbles = []; FILL.level = 0; }
+  else if (!mode && FILL.mode) {
+    const ok = S.power === 'ON' && !S.fault;          // the confirmed reading decides how it ends
+    FILL.mode = null; FILL.finishing = true; FILL.outcome = ok ? 'ok' : 'fail';
+    FILL.tween = { from: FILL.level, to: ok ? 1 : 0, t0: t, dur: ok ? 600 : 1300, ok };
+  }
+  if ((FILL.mode || FILL.finishing) && !FILL.raf && FILL.els) { FILL.last = performance.now(); FILL.raf = requestAnimationFrame(fillFrame); }
+}
+function fillFrame(ts) {
+  FILL.raf = 0;
+  const dt = Math.min(64, ts - FILL.last); FILL.last = ts;
+  const t = now();
+  let moving = false, hold = false;
+  if (FILL.mode) {
+    FILL.level = fillBase(FILL.mode, t);
+    moving = FILL.level < FILL_HOLD - 0.001; hold = !moving;
+  } else if (FILL.tween) {
+    const w = FILL.tween, k = Math.min(1, (t - w.t0) / w.dur);
+    const e = w.ok ? 1 - Math.pow(1 - k, 3) : (k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+    FILL.level = w.from + (w.to - w.from) * e; moving = true;
+    if (k >= 1) { FILL.tween = null; FILL.finishing = false; FILL.doneAt = t; FILL.bubbles = []; render(); return; }
+  } else return;
+  FILL.motion += ((moving ? 1 : hold ? .55 : 0) - FILL.motion) * Math.min(1, dt / 350);
+  let lvl = FILL.level;
+  if (hold) lvl += .012 * Math.sin(t / 1600 * 2 * Math.PI);
+  lvl = Math.max(0, Math.min(1, lvl));
+  drawFill(lvl, moving, dt, t);
+  FILL.raf = requestAnimationFrame(fillFrame);
+}
+function drawFill(lvl, moving, dt, t) {
+  const E = FILL.els;
+  const rgba = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+  // dial ring: grey "off" ring warming to the water glow as it fills
+  const mix = WATER_RGB.map(c => Math.round(255 + (c - 255) * lvl));
+  E.ring.style.borderColor = rgba(mix, (.13 + .42 * lvl).toFixed(2));
+  E.ring.style.boxShadow = '0 0 ' + Math.round(70 * lvl) + 'px ' + rgba(WATER_RGB, (.3 * lvl).toFixed(2)) + ',inset 0 0 ' + Math.round(40 * lvl) + 'px ' + rgba(WATER_RGB, (.1 * lvl).toFixed(2));
+  E.inner.style.background = 'radial-gradient(circle at 50% 30%,' + rgba(WATER_RGB, (.2 * lvl).toFixed(2)) + ',' + rgba(WATER_RGB, 0) + ' 72%)';
+  if (FILL.reduced) {            // reduced motion: no liquid, the resting layer fades in when confirmed
+    E.liquid.style.clipPath = 'inset(100% 0 0 0)';
+    E.surf.setAttribute('d', ''); E.sheen.setAttribute('d', ''); E.bub.innerHTML = '';
+    return;
+  }
+  const y0 = FILL_BOTTOM - lvl * (FILL_BOTTOM - FILL_TOP);
+  const amp = 2.4 * FILL.motion * Math.min(1, lvl * 6, (1 - lvl) * 8 + .15);
+  const ph = t / 420, pts = [];
+  for (let i = 0; i <= 28; i++) {
+    const x = i / 28 * 100;
+    pts.push([x, y0 + amp * Math.sin(2 * Math.PI * (x / 100) * 1.25 + ph) + amp * .45 * Math.sin(2 * Math.PI * (x / 100) * 2.6 - ph * 1.35)]);
+  }
+  const empty = lvl <= .001;
+  E.liquid.style.clipPath = empty ? 'inset(100% 0 0 0)' : 'polygon(' + pts.map(q => q[0].toFixed(2) + '% ' + q[1].toFixed(2) + '%').join(',') + ',100% 100%,0% 100%)';
+  E.poly.setAttribute('points', pts.map(q => q[0].toFixed(2) + ',' + q[1].toFixed(2)).join(' ') + ' 100,100 0,100');
+  const line = empty || lvl >= .999 ? '' : 'M' + pts.map(q => q[0].toFixed(2) + ' ' + q[1].toFixed(2)).join(' L');
+  E.surf.setAttribute('d', line);
+  E.sheen.setAttribute('d', line ? 'M' + pts.slice(4, 12).map(q => q[0].toFixed(2) + ' ' + (q[1] + 2.2).toFixed(2)).join(' L') : '');
+  E.surf.style.opacity = Math.min(1, FILL.motion * 1.4 + .25);
+  if (moving && lvl > .05 && Math.random() < dt / 140) {
+    FILL.bubbles.push({ x: 22 + Math.random() * 56, y: FILL_BOTTOM - 3, r: .8 + Math.random() * 1.6, v: .012 + Math.random() * .018, w: Math.random() * 6 });
+  }
+  FILL.bubbles.forEach(b => { b.y -= b.v * dt; b.x += Math.sin(t / 300 + b.w) * .03; });
+  FILL.bubbles = FILL.bubbles.filter(b => b.y > y0 + 1.5);
+  E.bub.innerHTML = FILL.bubbles.map(b => '<circle cx="' + b.x.toFixed(2) + '" cy="' + b.y.toFixed(2) + '" r="' + b.r.toFixed(2) + '" fill="rgba(255,255,255,.28)" stroke="rgba(255,255,255,.55)" stroke-width=".35"/>').join('');
+  E.glow.style.filter = 'drop-shadow(0 0 ' + (3 + 12 * lvl).toFixed(1) + 'px ' + rgba(WATER_RGB, (.14 + .28 * lvl).toFixed(2)) + ')';
+}
+
+/* =====================================================================
    Render — a tiny binder over the static markup
    ===================================================================== */
 const $$ = sel => Array.prototype.slice.call(document.querySelectorAll(sel));
@@ -1343,6 +1465,7 @@ function getPath(path) { return path.split('.').reduce((o, k) => (o == null ? o 
 function setPath(path, v) { const ks = path.split('.'); const last = ks.pop(); ks.reduce((o, k) => o[k], S)[last] = v; }
 
 function render() {
+  fillSync();
   const V = view();
   IF_EL.forEach(el => { const on = !!V[el.dataset.if]; if (el.hidden === on) el.hidden = !on; });
   T_EL.forEach(el => { const v = V[el.dataset.t]; const s = v == null ? '' : String(v); if (el.textContent !== s) el.textContent = s; });
@@ -1445,6 +1568,7 @@ function submitSetup() {
    Boot
    ===================================================================== */
 function boot() {
+  buildVessel(document.getElementById('vessel'));
   IF_EL = $$('[data-if]'); T_EL = $$('[data-t]'); CSS_EL = $$('[data-css]');
   LIST_EL = $$('[data-list]'); BIND_EL = $$('[data-bind]'); ARIA_EL = $$('[data-aria]');
 
@@ -1504,6 +1628,7 @@ function boot() {
 }
 
 // Test hook: read-only snapshot for automated checks. Exposes no credentials.
+window.__pumplinkFill = () => ({ mode: FILL.mode, level: +FILL.level.toFixed(3), finishing: FILL.finishing, outcome: FILL.outcome, reduced: FILL.reduced });
 window.__pumplink = { state: () => JSON.parse(JSON.stringify(Object.assign({}, S, { conn: S.conn ? { host: S.conn.host } : null, setup: null, edit: null }))), fresh, clientId: CLIENT_ID };
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();

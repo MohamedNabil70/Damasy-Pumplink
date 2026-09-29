@@ -107,6 +107,27 @@ means the whole unit: the Flowmac controller plus the pump.
 - **مفصول** means the ESP32 has cut power to the Flowmac, so the pump cannot run at all.
 - **جاهز is the normal resting state.**
 
+### Colours and the water fill
+
+- **جاهز (ready)** is shown in **light water blue** (`--water: #54d2f0`, icon `img/on-water.png`).
+  - This applies to the dial, its ring and glow, and the dot in the *حالة الموتور* row.
+  - The rest of the interface keeps the design's lime accent. **مفصول** stays grey glass.
+- **Restart:**
+  - The icon starts grey and fills with water from the bottom over the firmware's 6 s. The
+    water has a moving surface and rising bubbles.
+  - The fill stops at **90 %** and waits there, gently breathing, until `home/pump/state`
+    confirms power is back.
+  - Then it completes to 100 % (ready). If the reading comes back مفصول or never arrives, it
+    drains back to grey.
+- **ON command:** the same fill, reaching 90 % in under a second and completing on
+  confirmation.
+- **Where the fill level comes from:** the restart and command timestamps, not a free-running
+  timer. So another phone's restart, and an app opened mid-cycle, both show the right thing.
+  An app opened mid-cycle starts from empty, because the remaining time is unknown, and jumps
+  to full when the confirmation arrives.
+- **Reduced motion:** phones with *reduce motion* switched on get no liquid, only a fade to
+  the ready state once it is confirmed.
+
 ### History and Log
 
 - **History tab (السجل):** only commands that affect the motor: توصيل (`ON`), فصل (`OFF`)
